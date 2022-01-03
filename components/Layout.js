@@ -4,12 +4,13 @@ import styles from '../styles/App.module.css'
 import { AppBar, Toolbar, Typography, Container, Link } from '@mui/material'
 
 
-const Layout = ({title, children}) => {
+const Layout = ({title,description, children}) => {
 
     return (
         <div>
             <Head>
                 <title>{title}</title>
+                {description && <meta name="description" content={description} />}
             </Head>
             <AppBar position='static' className={styles.navBar}>
                 <Toolbar>

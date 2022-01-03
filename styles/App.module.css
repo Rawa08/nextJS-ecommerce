@@ -18,12 +18,22 @@
   flex-grow: 1;
 }
 
+.nativeColor{ 
+  background-color: #7f2d6e;
+  color:#fff}
+
+  .nativeColor:hover{ 
+    background-color: #fff;
+    border: #7f2d6e 1px solid;
+    color:#7f2d6e;}  
+
 .main {
   min-height: 80vh;
  
 }
 
 .footer{
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -31,4 +41,8 @@
   max-width: 100%;
   height: 400px;
   object-fit: contain;
+}
+
+.section{
+  margin: 10px 0;
 }

@@ -14,7 +14,7 @@ export default function Home() {
           product.image = `/images/${product.id}.jpg`;
           
 
-          product.title.length > 30 && (product.title = product.title.slice(0,25) + '...');
+         
           return (
             <Grid item md={4} key={product.id}> 
             <Card>
@@ -23,7 +23,7 @@ export default function Home() {
                 <CardMedia component='img' image={product.image} title={product.title}  className={styles.productImage}></CardMedia>
             
               <CardContent>
-                <Typography>{product.title}</Typography>
+                <Typography>{ product.title.length > 30 ? (product.title.slice(0,25) + '...'): product.title}</Typography>
               </CardContent>
            
                 <CardActions>
