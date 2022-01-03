@@ -12,13 +12,13 @@ export default function Home() {
        <Grid container spacing={3}>
         {data.products.map(product => {
           product.image = `/images/${product.id}.jpg`;
-          product.slug = product.id+product.title.slice(0,10).replace(/\s/g, "");
+          
 
           product.title.length > 30 && (product.title = product.title.slice(0,25) + '...');
           return (
             <Grid item md={4} key={product.id}> 
             <Card>
-            <NextLink href={`/product/${product.slug}`} passHref>
+            <NextLink href={`/product/${product.id}`} passHref>
               <CardActionArea>
                 <CardMedia component='img' image={product.image} title={product.title}  className={styles.productImage}></CardMedia>
             

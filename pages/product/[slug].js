@@ -5,9 +5,8 @@ const ProductScreen = () => {
 
     const router = useRouter();
     const {slug} = router.query;
-    const product = data.products.find(a => {
-       if(a.id+a.title.slice(0,10).replace(/\s/g, "") === slug) return a
-    })
+    const product = data.products.find(a => a.id == slug);
+
 
     if(!product) return(<div>Product not found</div>)
     return (
