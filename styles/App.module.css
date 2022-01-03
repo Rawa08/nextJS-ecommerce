@@ -1,0 +1,34 @@
+.navBar {
+  background-color: #7f2d6e;
+  margin-bottom: 10px;
+}
+
+.navBar a{
+  color: #fff;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.brand{
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.grow{
+  flex-grow: 1;
+}
+
+.main {
+  min-height: 80vh;
+ 
+}
+
+.footer{
+  text-align: center;
+}
+
+.productImage{
+  max-width: 100%;
+  height: 400px;
+  object-fit: contain;
+}
