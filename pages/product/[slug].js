@@ -28,7 +28,7 @@ const ProductScreen = () => {
             </Grid>
             <Grid item md={4} xs={12}>
                 <List>
-                <ListItem><Typography component='h1'>{product.title}</Typography></ListItem>
+                <ListItem><Typography component='h5' variant="h5">{product.title}</Typography></ListItem>
                     <ListItem><Typography>Category: {product.category}</Typography></ListItem>
                     <ListItem><Typography>Brand: Manufacturer unavailable</Typography></ListItem>
                     <ListItem><Typography>Rating: {product.rating.rate} Count:{product.rating.count}</Typography></ListItem>
