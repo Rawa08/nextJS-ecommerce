@@ -9,8 +9,8 @@ import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/materi
 const Layout = ({title,description, children}) => {
 
     const {state, dispatch} = useContext(Store);
-    const {cart} = state;
-    console.log(cart)
+    const {cartItems} = state.cart;
+
 
     return (
         <div>
@@ -27,7 +27,7 @@ const Layout = ({title,description, children}) => {
                     <div>
                         <NextLink href="/cart" passHref>
                             <Link>
-                             <Badge color="secondary" badgeContent={cart.cartItems.length}>Cart</Badge>
+                            {cartItems.length <1 ? 'Cart' :  <Badge color="secondary" badgeContent={cartItems.length}>Cart</Badge> }
                             </Link>
                         </NextLink>
                         <NextLink href="/cart" passHref>
