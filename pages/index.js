@@ -11,10 +11,7 @@ export default function Home() {
      <Layout title="My E-commerce">
        <Grid container spacing={3}>
         {data.products.map(product => {
-          product.image = `/images/${product.id}.jpg`;
-          
-
-         
+ 
           return (
             <Grid item md={4} key={product.id}> 
             <Card>
