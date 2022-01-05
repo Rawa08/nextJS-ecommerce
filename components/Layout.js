@@ -2,8 +2,10 @@ import {useContext} from 'react';
 import {Store} from '../utils/Store'
 import NextLink from 'next/link';
 import Head from 'next/head'
+import dynamic from 'next/dynamic';
 import styles from '../styles/App.module.css'
 import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/material'
+
 
 
 const Layout = ({title,description, children}) => {
@@ -45,4 +47,4 @@ const Layout = ({title,description, children}) => {
     )
 }
 
-export default Layout
+export default dynamic(()=>Promise.resolve(Layout), {ssr:false});

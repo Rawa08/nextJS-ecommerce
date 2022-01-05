@@ -1,6 +1,6 @@
 .navBar {
-  background-color: #7f2d6e;
-  margin-bottom: 10px;
+  background-color: #7f2d6e !important;
+  margin-bottom: 10px !important;
 }
 
 .navBar a{
@@ -19,13 +19,13 @@
 }
 
 .nativeColor{ 
-  background-color: #7f2d6e;
-  color:#fff}
+  background-color: #7f2d6e !important;
+  color:#fff !important}
 
   .nativeColor:hover{ 
-    background-color: #fff;
-    border: #7f2d6e 1px solid;
-    color:#7f2d6e;}  
+    background-color: #fff !important;
+    border: #7f2d6e 1px solid !important;
+    color:#7f2d6e !important;}  
 
 .main {
   min-height: 80vh;
@@ -38,9 +38,9 @@
 }
 
 .productImage{
-  max-width: 100%;
-  height: 400px;
-  object-fit: contain;
+  max-width: 100% !important;
+  height: 400px !important;
+  object-fit: contain !important;
 }
 
 .section{
