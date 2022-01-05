@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import {useEffect} from 'react'
-import { Store } from '../utils/Store';
+import { StoreProvider } from '../utils/Store';
 
 
 function MyApp({ Component, pageProps }) {
@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
   },[]);
 
   
-  return <Component {...pageProps} />
+return (<StoreProvider><Component {...pageProps} /></StoreProvider>)
 }
 
 export default MyApp

@@ -36,5 +36,5 @@ yarn-error.log*
 package-lock.json
 README.md
 .eslintrc.json
-utils/Store.js
+
 .env

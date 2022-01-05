@@ -1,10 +1,16 @@
+import {useContext} from 'react';
+import {Store} from '../utils/Store'
 import NextLink from 'next/link';
 import Head from 'next/head'
 import styles from '../styles/App.module.css'
-import { AppBar, Toolbar, Typography, Container, Link } from '@mui/material'
+import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/material'
 
 
 const Layout = ({title,description, children}) => {
+
+    const {state, dispatch} = useContext(Store);
+    const {cart} = state;
+    console.log(cart)
 
     return (
         <div>
@@ -20,7 +26,9 @@ const Layout = ({title,description, children}) => {
                     <div className={styles.grow}></div>
                     <div>
                         <NextLink href="/cart" passHref>
-                            <Link>Cart</Link>
+                            <Link>
+                             <Badge color="secondary" badgeContent={cart.cartItems.length}>Cart</Badge>
+                            </Link>
                         </NextLink>
                         <NextLink href="/cart" passHref>
                             <Link>Login</Link>

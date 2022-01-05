@@ -1,17 +1,18 @@
 
+import { useContext } from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image'
 import Layout from '../../components/Layout';
 import {Link, Grid, List, ListItem, Typography, Card, Button,} from '@mui/material';
 import styles from  '../../styles/App.module.css';
-
+import {Store} from '../../utils/Store';
 import db from '../../utils/db';
 import Product from '../../models/Product';
-
+import axios from 'axios';
 
 const ProductScreen = ({product}) => {
 
-
+    const {dispatch} = useContext(Store);
 
     if(!product) return(<div className={styles.section}>
         <Typography>Can&apos;t Find Product</Typography>
@@ -19,7 +20,15 @@ const ProductScreen = ({product}) => {
             <Link><Typography>Back to products</Typography></Link>
         </NextLink>
     </div>);
+
     
+
+    const addToCart = async () => {
+        // const {data} = await axios.get(`/api/products/${product._id}`);
+        
+        dispatch({type:'ADD_TO_CART', payload:{...product, quantity:1}})
+    } 
+
     return (
        <Layout title={product.title} description={product.description}>
            <div className={styles.section}>
@@ -54,7 +63,7 @@ const ProductScreen = ({product}) => {
                         </Grid>
                     </ListItem>
                     <ListItem>
-                        <Button variant='contained' fullWidth className={styles.nativeColor}>Add to Bag</Button>
+                        <Button variant='contained' fullWidth className={styles.nativeColor} onClick={addToCart}>Add to Bag</Button>
                     </ListItem>
                 </List>
                 </Card>
