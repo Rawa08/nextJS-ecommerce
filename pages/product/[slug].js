@@ -1,17 +1,17 @@
+import { useEffect } from 'react';
 import {useRouter} from 'next/router';
 import NextLink from 'next/link';
 import Image from 'next/image'
-import {data} from '../../utils/data'
 import Layout from '../../components/Layout';
 import {Link, Grid, List, ListItem, Typography, Card, Button,} from '@mui/material';
 import styles from  '../../styles/App.module.css';
 
+import db from '../../utils/db';
+import Product from '../../models/Product';
 
-const ProductScreen = () => {
 
-    const router = useRouter();
-    const {slug} = router.query;
-    const product = data.products.find(a => a.id == slug);
+const ProductScreen = ({product}) => {
+
 
 
     if(!product) return(<div>Product not found</div>)
@@ -60,3 +60,17 @@ const ProductScreen = () => {
 }
 
 export default ProductScreen
+
+export const getServerSideProps = async context => {
+    
+    await db.connectDb();
+    const product = await Product.findById(context.query.slug).lean();
+    await db.disconnectDb();
+
+    
+    return {
+      props:{
+        product: db.convertDocToObject(product)
+      },
+    };
+  }

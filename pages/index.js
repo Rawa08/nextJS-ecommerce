@@ -1,21 +1,23 @@
 
 import NextLink from 'next/link';
 import Layout from '../components/Layout';
-import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button} from '@mui/material'
-import {data} from '../utils/data';
+import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button} from '@mui/material';
 import styles from '../styles/App.module.css';
 
+import db from '../utils/db';
+import Product from '../models/Product';
 
-export default function Home() {
+
+export default function Home({products}) {
   return (
      <Layout title="My E-commerce">
        <Grid container spacing={3}>
-        {data.products.map(product => {
+        {products.map(product => {
  
           return (
-            <Grid item md={4} key={product.id}> 
+            <Grid item md={4} key={product._id}> 
             <Card>
-            <NextLink href={`/product/${product.id}`} passHref>
+            <NextLink href={`/product/${product._id}`} passHref>
               <CardActionArea>
                 <CardMedia component='img' image={product.image} title={product.title}  className={styles.productImage}></CardMedia>
             
@@ -37,3 +39,13 @@ export default function Home() {
      </Layout>
   )
 }
+
+
+export const getServerSideProps = async context => {
+  await db.connectDb();
+  const products = await Product.find({}).lean();
+  await db.disconnectDb();
+  return{
+    props: {products: products.map(p => (db.convertDocToObject(p)))}
+  }
+} 
