@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import {useRouter} from 'next/router';
+
 import NextLink from 'next/link';
 import Image from 'next/image'
 import Layout from '../../components/Layout';
@@ -14,7 +13,13 @@ const ProductScreen = ({product}) => {
 
 
 
-    if(!product) return(<div>Product not found</div>)
+    if(!product) return(<div className={styles.section}>
+        <Typography>Can&apos;t Find Product</Typography>
+        <NextLink href="/" passHref>
+            <Link><Typography>Back to products</Typography></Link>
+        </NextLink>
+    </div>);
+    
     return (
        <Layout title={product.title} description={product.description}>
            <div className={styles.section}>
@@ -24,7 +29,7 @@ const ProductScreen = ({product}) => {
            </div>
         <Grid container spacing={1}>
             <Grid item md={5} xs={12}>
-                <Image src={product.image} width={640} height={640}  alt={product.title} objectFit='contain' layout='responsive' ></Image>
+                <Image src={product.image} width={640} height={640}  alt={product.title} objectFit='contain' layout='responsive' priority='true' ></Image>
             </Grid>
             <Grid item md={4} xs={12}>
                 <List>
@@ -64,13 +69,21 @@ export default ProductScreen
 export const getServerSideProps = async context => {
     
     await db.connectDb();
-    const product = await Product.findById(context.query.slug).lean();
-    await db.disconnectDb();
+    try{
+        const product = await Product.findById(context.query.slug).lean();
+        return {
+            props:{
+              product: db.convertDocToObject(product)
+            },
+          };
+    }catch(e){
+        if(e){
+            return{props:{}}
+        }
+    }
+   
 
     
-    return {
-      props:{
-        product: db.convertDocToObject(product)
-      },
-    };
+    await db.disconnectDb();
+   
   }
