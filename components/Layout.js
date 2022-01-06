@@ -12,7 +12,7 @@ const Layout = ({title,description, children}) => {
 
     const {state, dispatch} = useContext(Store);
     const {cartItems} = state.cart;
-
+    const cartCount = cartItems.reduce((accumulator, item) => (accumulator + item.quantity),0);
 
     return (
         <div>
@@ -29,7 +29,7 @@ const Layout = ({title,description, children}) => {
                     <div>
                         <NextLink href="/cart" passHref>
                             <Link>
-                            {cartItems.length <1 ? 'Cart' :  <Badge color="secondary" badgeContent={cartItems.length}>Cart</Badge> }
+                            {cartCount <1 ? 'Cart' :  <Badge color="secondary" badgeContent={cartCount}>Cart</Badge> }
                             </Link>
                         </NextLink>
                         <NextLink href="/cart" passHref>

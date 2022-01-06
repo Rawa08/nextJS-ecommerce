@@ -1,4 +1,6 @@
 
+import {useContext} from 'react';
+import {Store} from '../utils/Store';
 import NextLink from 'next/link';
 import Layout from '../components/Layout';
 import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button} from '@mui/material';
@@ -9,6 +11,14 @@ import Product from '../models/Product';
 
 
 export default function Home({products}) {
+
+  const {dispatch} = useContext(Store);
+  const addToCart = product => {
+    
+      dispatch({type:'ADD_TO_CART', payload:{...product, quantity:1}})
+   
+  }
+
   return (
      <Layout title="My E-commerce">
        <Grid container spacing={3}>
@@ -19,18 +29,20 @@ export default function Home({products}) {
             <Card>
             <NextLink href={`/product/${product._id}`} passHref>
               <CardActionArea>
+             
                 <CardMedia component='img' image={product.image} title={product.title}  className={styles.productImage}></CardMedia>
-            
+                </CardActionArea>
+                </NextLink>
               <CardContent>
                 <Typography>{ product.title.length > 30 ? (product.title.slice(0,25) + '...'): product.title}</Typography>
               </CardContent>
            
                 <CardActions>
                   <Typography>$ {product.price}</Typography>
-                  <Button size='small' color="primary"> Add to Bag</Button>
+                  <Button size='small' color="primary" onClick={()=>addToCart(product)}> Add to Bag</Button>
                 </CardActions>
-              </CardActionArea>
-              </NextLink>
+              
+              
             </Card>
             </Grid>
           )

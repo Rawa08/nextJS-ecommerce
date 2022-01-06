@@ -1,9 +1,9 @@
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image'
 import Layout from '../../components/Layout';
-import {Link, Grid, List, ListItem, Typography, Card, Button,} from '@mui/material';
+import {Link, Grid, List, ListItem, Typography, Card, Button,Select, MenuItem} from '@mui/material';
 import styles from  '../../styles/App.module.css';
 import {Store} from '../../utils/Store';
 import db from '../../utils/db';
@@ -11,7 +11,7 @@ import Product from '../../models/Product';
 import axios from 'axios';
 
 const ProductScreen = ({product}) => {
-
+    const [quantity, setQuantity] = useState(1);
     const {dispatch} = useContext(Store);
 
     if(!product) return(<div className={styles.section}>
@@ -24,9 +24,7 @@ const ProductScreen = ({product}) => {
     
 
     const addToCart = async () => {
-        // const {data} = await axios.get(`/api/products/${product._id}`);
-        
-        dispatch({type:'ADD_TO_CART', payload:{...product, quantity:1}})
+       dispatch({type:'ADD_TO_CART', payload:{...product, quantity}})
     } 
 
     return (
@@ -64,6 +62,15 @@ const ProductScreen = ({product}) => {
                     </ListItem>
                     <ListItem>
                         <Button variant='contained' fullWidth className={styles.nativeColor} onClick={addToCart}>Add to Bag</Button>
+                    </ListItem>
+                    <ListItem>
+                    <Select defaultValue={1} fullWidth onChange={(e) => setQuantity(e.target.value)}>
+                          {[...Array(10).keys()].map((i) => (
+                            <MenuItem key={i + 1} value={i + 1}>
+                              {i + 1}
+                            </MenuItem>
+                          ))}
+                        </Select>
                     </ListItem>
                 </List>
                 </Card>

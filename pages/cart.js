@@ -63,9 +63,13 @@ const Cart = () => {
                                                   </NextLink>
                                               </TableCell>
                                               <TableCell align='right'>
-                                                  <Select defaultValue={2}>
-                                                          
-                                                  </Select>
+                                                  <Select defaultValue={item.quantity}>
+                                                  {[...Array(25).keys()].map((i) => (
+                            <MenuItem key={i + 1} value={i + 1}>
+                              {i + 1}
+                            </MenuItem>
+                          ))}
+                                                  </Select> 
                                               </TableCell>
                                               <TableCell align='right'>{item.price}</TableCell>
                                               <TableCell align='right'><Button variant='contained' color='secondary'>X</Button></TableCell>

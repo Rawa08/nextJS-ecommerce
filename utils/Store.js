@@ -19,11 +19,15 @@ const reducer = (state, action) => {
 
         case 'ADD_TO_CART':{
             const newItem = action.payload;
-            console.log(newItem)
             const itemExist = state.cart.cartItems.find(item => item._id === newItem._id);
+            const cartItems = itemExist ? state.cart.cartItems.map(item => {
+                if(item._id === newItem._id){
+                    item.quantity += newItem.quantity
+                }
+                return item
+            })
+             : [...state.cart.cartItems, newItem]
 
-            const cartItems = itemExist ? state.cart.cartItems.map(item => item._id === itemExist._id ? newItem : item)
-            : [...state.cart.cartItems, newItem];
             Cookies.set('cartItems', JSON.stringify(cartItems))
             return{...state, cart:{...state.cart, cartItems}}
 
