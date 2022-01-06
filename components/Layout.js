@@ -10,7 +10,7 @@ import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/materi
 
 const Layout = ({title,description, children}) => {
 
-    const {state, dispatch} = useContext(Store);
+    const {state} = useContext(Store);
     const {cartItems} = state.cart;
     const cartCount = cartItems.reduce((accumulator, item) => (accumulator + item.quantity),0);
 

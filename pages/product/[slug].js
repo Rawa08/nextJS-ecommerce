@@ -8,7 +8,7 @@ import styles from  '../../styles/App.module.css';
 import {Store} from '../../utils/Store';
 import db from '../../utils/db';
 import Product from '../../models/Product';
-import axios from 'axios';
+
 
 const ProductScreen = ({product}) => {
     const [quantity, setQuantity] = useState(1);

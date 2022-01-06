@@ -32,7 +32,28 @@ const reducer = (state, action) => {
             return{...state, cart:{...state.cart, cartItems}}
 
         }
+        case 'UPDATE_ITEM_QUANTITY':{
+            const {id, quantity} = action.payload;
+           
+            const cartItems = state.cart.cartItems.map(item => {
+                if(item._id === id){
+                    item.quantity = quantity
+                }
+                return item
+            });
+            Cookies.set('cartItems', JSON.stringify(cartItems))
+            return{...state, cart:{...state.cart, cartItems}}
 
+        }
+        case 'REMOVE_CART_ITEM':{
+            const {id} = action.payload;
+           
+            const cartItems = state.cart.cartItems.filter(item => item._id !== id);
+            Cookies.set('cartItems', JSON.stringify(cartItems))
+            return{...state, cart:{...state.cart, cartItems}}
+
+        }
+        
         default:
              return state       
     }

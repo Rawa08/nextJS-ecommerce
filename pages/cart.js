@@ -3,14 +3,18 @@ import NextLink from 'next/link';
 import Image from 'next/image'
 import {Store} from '../utils/Store';
 import Layout from '../components/Layout';
-import {Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Select, MenuItem } from '@mui/material';
+import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Select, MenuItem } from '@mui/material';
 import styles from  '../styles/App.module.css';
+import dynamic from 'next/dynamic';
+
 
 const Cart = () => {
 
-    const {state} = useContext(Store);
+    const {state, dispatch} = useContext(Store);
     const {cart: {cartItems}} = state;
-
+    const updateQuantity = (id, quantity) => (dispatch({type:'UPDATE_ITEM_QUANTITY', payload:{id, quantity}})) 
+    const removeItem = (id) => (dispatch({type:'REMOVE_CART_ITEM', payload:{id}})) 
+    
     return (
         <Layout title="Cart">
             <Typography component='h3' variant='h3'>Shopping Cart</Typography>
@@ -63,7 +67,8 @@ const Cart = () => {
                                                   </NextLink>
                                               </TableCell>
                                               <TableCell align='right'>
-                                                  <Select defaultValue={item.quantity}>
+                                                  <Select value={item.quantity} 
+                                                  onChange={(e)=> updateQuantity(item._id, e.target.value)}>
                                                   {[...Array(25).keys()].map((i) => (
                             <MenuItem key={i + 1} value={i + 1}>
                               {i + 1}
@@ -72,7 +77,7 @@ const Cart = () => {
                                                   </Select> 
                                               </TableCell>
                                               <TableCell align='right'>{item.price}</TableCell>
-                                              <TableCell align='right'><Button variant='contained' color='secondary'>X</Button></TableCell>
+                                              <TableCell align='right'><Button variant='contained' color='secondary' onClick={() => removeItem(item._id)}>X</Button></TableCell>
                                           </TableRow>
                                       ))}
                                   </TableBody>
@@ -80,7 +85,16 @@ const Cart = () => {
                           </TableContainer>
                       </Grid>
                       <Grid item md={3} xs={12}>
-                          Actions
+                          <Card>
+                              <List>
+                                  <ListItem>
+                                      <Typography>Subtotal: ${Math.round(cartItems.reduce((acc, curr)=> acc + (curr.quantity * curr.price), 0) * 100)/100}</Typography>
+                                  </ListItem>
+                                  <ListItem>
+                                      <Button variant='contained' color='secondary' fullWidth>Checkout</Button> 
+                                  </ListItem>
+                              </List>
+                          </Card>
                       </Grid>
                   </Grid>
         }
@@ -88,4 +102,4 @@ const Cart = () => {
     )
 }
 
-export default Cart
+export default dynamic(() => Promise.resolve(Cart), {ssr:false})
