@@ -32,7 +32,7 @@ const Layout = ({title,description, children}) => {
                             {cartCount <1 ? 'Cart' :  <Badge color="secondary" badgeContent={cartCount}>Cart</Badge> }
                             </Link>
                         </NextLink>
-                        <NextLink href="/cart" passHref>
+                        <NextLink href="/login" passHref>
                             <Link>Login</Link>
                         </NextLink>
                     </div>

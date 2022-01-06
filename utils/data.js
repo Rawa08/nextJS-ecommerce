@@ -1,4 +1,21 @@
-export const data = {products:[
+import bcrypt from 'bcrypt';
+export const data = {
+  users:[
+    {
+      fullName: "Rawa Aref",
+      email:"rawa@rawa.se" ,
+      password:bcrypt.hashSync('123456', 10) ,
+      isAdmin:true
+    },
+    {
+      fullName: "John D",
+      email:"john@email.com" ,
+      password:bcrypt.hashSync('123456', 10) ,
+      isAdmin:false
+    }
+  ],
+  
+  products:[
     {
       id: 1,
       title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",

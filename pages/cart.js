@@ -6,15 +6,16 @@ import Layout from '../components/Layout';
 import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Select, MenuItem } from '@mui/material';
 import styles from  '../styles/App.module.css';
 import dynamic from 'next/dynamic';
+import { Router, useRouter } from 'next/router';
 
 
 const Cart = () => {
-
+    const router = useRouter();
     const {state, dispatch} = useContext(Store);
     const {cart: {cartItems}} = state;
     const updateQuantity = (id, quantity) => (dispatch({type:'UPDATE_ITEM_QUANTITY', payload:{id, quantity}})) 
     const removeItem = (id) => (dispatch({type:'REMOVE_CART_ITEM', payload:{id}})) 
-    
+    const checkoutHandler = () => router.push('/shipping')
     return (
         <Layout title="Cart">
             <Typography component='h3' variant='h3'>Shopping Cart</Typography>
@@ -91,7 +92,7 @@ const Cart = () => {
                                       <Typography>Subtotal: ${Math.round(cartItems.reduce((acc, curr)=> acc + (curr.quantity * curr.price), 0) * 100)/100}</Typography>
                                   </ListItem>
                                   <ListItem>
-                                      <Button variant='contained' color='secondary' fullWidth>Checkout</Button> 
+                                      <Button variant='contained' color='secondary' fullWidth onClick={checkoutHandler}>Checkout</Button> 
                                   </ListItem>
                               </List>
                           </Card>
