@@ -1,16 +1,16 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 export const data = {
   users:[
-    {
+    { 
       fullName: "Rawa Aref",
       email:"rawa@rawa.se" ,
-      password:bcrypt.hashSync('123456', 10) ,
+      password:bcrypt.hashSync('123456',10) ,
       isAdmin:true
     },
     {
       fullName: "John D",
       email:"john@email.com" ,
-      password:bcrypt.hashSync('123456', 10) ,
+      password:bcrypt.hashSync('123456',10) ,
       isAdmin:false
     }
   ],
