@@ -13,9 +13,13 @@ const Login = () => {
     const submitLogin = async e => {
         e.preventDefault();
         if(email.length >0 && password.length > 0){
+        try{
+            const {data} = await axios.post(`/api/users/login`, {email, password});
+        }catch(e){
+            console.log(e.message)
+        }
         
-        const {data} = await axios.post(`/api/users/login`, {email, password});
-        console.log(await data)
+        
     }else {
         alert('Provide Email and Password')
     }
