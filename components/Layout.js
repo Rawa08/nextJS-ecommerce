@@ -4,15 +4,15 @@ import NextLink from 'next/link';
 import Head from 'next/head'
 import dynamic from 'next/dynamic';
 import styles from '../styles/App.module.css'
-import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/material'
+import { AppBar, Toolbar, Typography, Container, Link, Badge, Button } from '@mui/material'
 
 
 
 const Layout = ({title,description, children}) => {
 
-    const {state} = useContext(Store);
-    const {cartItems} = state.cart;
-    const cartCount = cartItems.reduce((accumulator, item) => (accumulator + item.quantity),0);
+    const {state:{cart, user}} = useContext(Store);
+    
+    const cartCount = cart.cartItems.reduce((accumulator, item) => (accumulator + item.quantity),0);
 
     return (
         <div>
@@ -32,9 +32,9 @@ const Layout = ({title,description, children}) => {
                             {cartCount <1 ? 'Cart' :  <Badge color="secondary" badgeContent={cartCount}>Cart</Badge> }
                             </Link>
                         </NextLink>
-                        <NextLink href="/login" passHref>
-                            <Link>Login</Link>
-                        </NextLink>
+                        
+                            {user ?<a> {user.name} </a>:<NextLink href="/login" passHref><Link>Login</Link></NextLink>}
+                        
                     </div>
                 </Toolbar>
             </AppBar>
