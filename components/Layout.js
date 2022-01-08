@@ -1,10 +1,11 @@
 import {useContext} from 'react';
-import {Store} from '../utils/Store'
+import {Store} from '../utils/Store';
 import NextLink from 'next/link';
-import Head from 'next/head'
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import styles from '../styles/App.module.css'
-import { AppBar, Toolbar, Typography, Container, Link, Badge, Button } from '@mui/material'
+import styles from '../styles/App.module.css';
+import { AppBar, Toolbar, Typography, Container, Link, Badge } from '@mui/material';
+import UserMenu from './UserMenu';
 
 
 
@@ -33,7 +34,7 @@ const Layout = ({title,description, children}) => {
                             </Link>
                         </NextLink>
                         
-                            {user ?<a> {user.name} </a>:<NextLink href="/login" passHref><Link>Login</Link></NextLink>}
+                            {user ? <UserMenu userInfo={user} />:<NextLink href="/login" passHref><Link>Login</Link></NextLink>}
                         
                     </div>
                 </Toolbar>

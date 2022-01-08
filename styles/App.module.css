@@ -51,3 +51,8 @@
   max-width: 800px;
   margin: 0 auto;
 }
+
+.navButton{
+  color:#fff !important;
+  text-transform:initial !important;
+}
