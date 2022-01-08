@@ -18,7 +18,7 @@ const Login = () => {
     const {redirect} = router.query;
 
     if(user){
-        console.log(user)
+        
         router.push(redirect || '/');
     };
 

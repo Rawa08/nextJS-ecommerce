@@ -1,11 +1,13 @@
 import { Button, Menu, MenuItem } from '@mui/material';
-import {useState} from 'react';
+import {useState, useContext} from 'react';
+import {Store} from '../utils/Store';
+import Cookies from 'js-cookie';
 import styles from '../styles/App.module.css';
 import { useRouter } from 'next/router';
 
 const UserMenu = ({ userInfo }) => {
 
-
+    const {dispatch} = useContext(Store);
     const [anchorEl, setAnchorEl] = useState(null);
     
     const router = useRouter();
@@ -20,7 +22,13 @@ const UserMenu = ({ userInfo }) => {
         }
       };
 
-    const logoutClickHandler = () => null
+    const logoutClickHandler = () => {
+        setAnchorEl(null);
+        dispatch({type:'USER_LOGOUT'});
+        Cookies.remove('user');
+        Cookies.remove('cartItems');
+        router.push('/');
+    }
 
 
   return (

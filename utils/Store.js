@@ -56,11 +56,12 @@ const reducer = (state, action) => {
 
         }
 
-        case 'USER_LOGIN':{
-            
-            return {...state, user:action.payload}
+        case 'USER_LOGIN':
+            return {...state, user:action.payload};
 
-        }
+        
+        case 'USER_LOGOUT':
+            return {...state, user:null, cart:{cartItems:[]}};    
         
         default:
              return state       
