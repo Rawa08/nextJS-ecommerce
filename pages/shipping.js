@@ -16,11 +16,12 @@ const Shipping = () => {
             router.push('/login?redirect=/shipping')
          }
         
-    }, [user])
+    }, [])
 
   
 
     return (
+       
         <Layout title="Shipping">
             <Typography component="h2" variant="h2">Shipping</Typography>
         </Layout>
