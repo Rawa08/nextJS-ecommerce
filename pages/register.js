@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Store } from "../utils/Store";
 
-const Login = () => {
+const Register = () => {
     const {state, dispatch} = useContext(Store);
     const {user} = state;
 
@@ -22,13 +22,18 @@ const Login = () => {
         router.push(redirect || '/');
     };
 
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    const submitLogin = async e => {
+    const submitRegister = async e => {
         e.preventDefault();
 
-        if(email.length >0 && password.length > 0){
+        if(password !== passwordConfirm){
+            alert('Password don´t match!')
+        }
+        else {
 
         try{
             const {data} = await axios.post(`/api/users/login`, {email, password});
@@ -39,19 +44,18 @@ const Login = () => {
         }catch(e){
            console.log(e.response.data ? e.response.data.message : e.message)
         }
-        
-        
-    }else {
-        alert('Provide Email and Password')
     }
     }
     return (
-        <Layout title="Login">
-            <form className={styles.form} onSubmit={e => submitLogin(e)}>
+        <Layout title="Register">
+            <form className={styles.form} onSubmit={e => submitRegister(e)}>
                 <Typography component='h2' variant='h2'>
-                    Login
+                    Register
                 </Typography>
                 <List>
+                    <ListItem>
+                        <TextField variant='outlined' fullWidth id="fullName" label='Full Name' inputProps={{type:'text'}} onChange={e => setFullName(e.target.value)}></TextField>
+                    </ListItem>
                     <ListItem>
                         <TextField variant='outlined' fullWidth id="email" label='Email' inputProps={{type:'email'}} onChange={e => setEmail(e.target.value)}></TextField>
                     </ListItem>
@@ -59,10 +63,13 @@ const Login = () => {
                     <TextField variant='outlined' fullWidth id="password" label='Password' inputProps={{type:'password'}} onChange={e => setPassword(e.target.value)}></TextField>
                     </ListItem>
                     <ListItem>
-                        <Button variant='contained' color='secondary' type='submit' fullWidth>Sign in</Button>
+                    <TextField variant='outlined' fullWidth id="passwordConfirm" label='Password Confirmation' inputProps={{type:'password'}} onChange={e => setPasswordConfirm(e.target.value)}></TextField>
                     </ListItem>
                     <ListItem>
-                     Don&apos;t have an account? &nbsp; <NextLink href={`/register?redirect=${redirect || '/'}`} passHref><Link>Get one here</Link></NextLink>
+                        <Button variant='contained' color='secondary' type='submit' fullWidth>Register</Button>
+                    </ListItem>
+                    <ListItem>
+                     Have an account? &nbsp; <NextLink href={`/login?redirect=${redirect || '/'}`} passHref><Link>Login here!</Link></NextLink>
                     </ListItem>
                 </List>
             </form>
@@ -70,4 +77,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register
