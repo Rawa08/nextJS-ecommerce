@@ -31,12 +31,13 @@ const Register = () => {
         e.preventDefault();
 
         if(password !== passwordConfirm){
-            alert('Password don´t match!')
+            alert("Password don't match!");
+            return;
         }
         else {
 
         try{
-            const {data} = await axios.post(`/api/users/login`, {email, password});
+            const {data} = await axios.post(`/api/users/register`, {fullName,email, password});
             dispatch({type:'USER_LOGIN', payload: data});
             Cookies.set('user', JSON.stringify(data));
             router.push(redirect || '/');
