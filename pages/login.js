@@ -4,13 +4,16 @@ import styles from '../styles/App.module.css'
 
 import Cookies from "js-cookie";
 import axios from 'axios';
-
-import { useContext, useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
+ 
+import { useContext} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Store } from "../utils/Store";
 
 const Login = () => {
+    const {handleSubmit, control, formState:{errors}} = useForm();
+
     const {state, dispatch} = useContext(Store);
     const {user} = state;
 
@@ -22,13 +25,7 @@ const Login = () => {
         router.push(redirect || '/');
     };
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const submitLogin = async e => {
-        e.preventDefault();
-
-        if(email.length >0 && password.length > 0){
+    const submitLogin = async ({email, password}) => {
 
         try{
             const {data} = await axios.post(`/api/users/login`, {email, password});
@@ -39,24 +36,48 @@ const Login = () => {
         }catch(e){
            console.log(e.response.data ? e.response.data.message : e.message)
         }
-        
-        
-    }else {
-        alert('Provide Email and Password')
-    }
     }
     return (
         <Layout title="Login">
-            <form className={styles.form} onSubmit={e => submitLogin(e)}>
+            <form className={styles.form} onSubmit={handleSubmit(submitLogin)}>
                 <Typography component='h2' variant='h2'>
                     Login
                 </Typography>
                 <List>
                     <ListItem>
-                        <TextField variant='outlined' fullWidth id="email" label='Email' inputProps={{type:'email'}} onChange={e => setEmail(e.target.value)}></TextField>
+                        <Controller 
+                        name="email"
+                        control={control}
+                        defaultValue=""
+                        rules={{
+                            required:true,
+                            pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
+                        }}
+                        render={({field}) => (
+                            <TextField variant='outlined' fullWidth id="email" label='Email' inputProps={{type:'email'}}
+                            error={Boolean(errors.email)}
+                            helperText={errors.email ? errors.email.type === 'pattern' ? 'Email is not valid' : 'Email is requierd':''} {...field}></TextField>
+                        )}>
+                        
+                        </Controller>    
                     </ListItem>
                     <ListItem>
-                    <TextField variant='outlined' fullWidth id="password" label='Password' inputProps={{type:'password'}} onChange={e => setPassword(e.target.value)}></TextField>
+                    <Controller 
+                        name="password"
+                        control={control}
+                        defaultValue=""
+                        rules={{
+                            required:true,
+                            minLength:6
+                        }}
+                        render={({field}) => (
+                            <TextField variant='outlined' fullWidth id="password" label='Password' inputProps={{type:'password'}}
+                            error={Boolean(errors.password)}
+                            helperText={errors.password ? errors.password.type === 'minLength' ? 'Password is to Short' : 'Password is requierd':''} {...field}></TextField>
+                        )}>
+                        
+                        </Controller> 
+
                     </ListItem>
                     <ListItem>
                         <Button variant='contained' color='secondary' type='submit' fullWidth>Sign in</Button>
