@@ -29,7 +29,7 @@ const Shipping = () => {
          setValue('postalCode', postalCode);
          setValue('country', country)
         
-    }, [])
+    }, []);
 
    
 
