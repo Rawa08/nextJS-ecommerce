@@ -5,7 +5,7 @@ import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from "js-cookie";
 import axios from 'axios';
-import getError from '../utils/formatError';
+import {getError} from '../utils/formatError';
 import { useContext} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';

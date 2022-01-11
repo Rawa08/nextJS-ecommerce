@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import getError from '../utils/formatError';
+import {getError} from '../utils/formatError';
 
 
 const Order = () => {
@@ -22,6 +22,11 @@ const Order = () => {
     useEffect(() => {
         if(!paymentMethod){
             router.push('/payment')
+         }
+         
+         if(cartItems.length <1){
+            
+            router.push('/')
          }
         
     }, []);
@@ -34,17 +39,17 @@ const Order = () => {
 
     const itemsPrice = roundPrice(cartItems.reduce((acc, curr)=> acc + (curr.quantity * curr.price), 0));
     const vatAmount = roundPrice(itemsPrice * 0.2);
-    const shippingPrice = itemsPrice > 200 ? 0 : 4.9;
+    const shippingPrice = itemsPrice > 0  ?  itemsPrice > 200 ? 0 : 4.9 : 0;
     const totalPrice = roundPrice((itemsPrice+shippingPrice)); 
     
     const submitOrder = async () => {
         closeSnackbar();
 
 
-
         try {
+            
             setLoading(true);
-            const {data} = await axios.post(`/api/orders`, {
+            const {data} = await axios.post('/api/orders', {
                 orderItems: cartItems,
                 shippingAddress,
                 paymentMethod,
@@ -54,16 +59,19 @@ const Order = () => {
                 totalPrice
             },{
                 headers:{
-                    authorization: `Bearer ${user.token}`
-                },
+                    authorization: `Bearer ${user.token}`,
+                    
+                  }
             });
+            
 
             dispatch({type:'CART_CLEAR'});
             Cookies.remove('cartItems');
             setLoading(false);
-            router.push(`/order/${data.order._id}`)
+            router.push(`/order/${data._id}`)
 
         } catch (error) {
+            
             setLoading(false);
            
             enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 });
@@ -219,6 +227,9 @@ const Order = () => {
                                   <ListItem>
                                       <Button variant='contained' color='secondary' fullWidth onClick={submitOrder} >Place Order</Button> 
                                   </ListItem>
+                                  <ListItem>
+                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={() => router.push('/payment')}>Back</Button>
+                    </ListItem>
                                   {loading && <ListItem>
                                       <CircularProgress /></ListItem>}
                               </List>

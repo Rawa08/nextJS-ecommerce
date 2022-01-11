@@ -3,8 +3,14 @@ import moongose from 'mongoose';
 const orderSchema = new moongose.Schema({
    
   user:{type: moongose.Schema.Types.ObjectId, ref:'User', required:true},
-  orderItems: [{title: {type: String, required:true}, description:{type: String, required:true}, image:{type: String, required:true}, 
-    quantity: {type: Number, required:true}, price:{type: Number, required:true} ,rating: {
+  orderItems: [
+    {title: {type: String, required:true}, 
+    brand:{type: String, required: true, default:'Unknown Manufacturer'},
+    category: {type: String, required: true},
+    description:{type: String, required:true}, 
+    image:{type: String, required:true}, 
+    quantity: {type: Number, required:true}, price:{type: Number, required:true} ,
+    rating: {
     rate: {type: Number},
     count: {type: Number}
   } }],
@@ -25,4 +31,4 @@ const orderSchema = new moongose.Schema({
 
 const Order = moongose.models.Product || moongose.model('Order', orderSchema);
 
-export default Product;
+export default Order;

@@ -1,7 +1,7 @@
 import { Link, Button, List, ListItem, TextField, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css'
-import getError from '../utils/formatError';
+import{ getError }from '../utils/formatError';
 import Cookies from "js-cookie";
 import axios from 'axios';
 import {useForm, Controller} from 'react-hook-form';
