@@ -1,5 +1,5 @@
 
-import { Link, Button, List, ListItem, TextField, Typography } from "@mui/material";
+import {  Button, List, ListItem, TextField, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
@@ -7,15 +7,14 @@ import {useForm, Controller} from 'react-hook-form';
 import Cookies from "js-cookie";
 import { useContext, useEffect} from 'react';
 import { useRouter } from "next/router";
-import NextLink from 'next/link';
 import { Store } from "../utils/Store";
+import CheckoutWizard from "../components/CheckoutWizard";
 
 const Shipping = () => {
     const {state, state:{user, cart:{shippingAddress}}, dispatch} = useContext(Store);
    
     const {handleSubmit, control, formState:{errors}, setValue} = useForm();
     const router = useRouter();
-    const {redirect} = router.query;
 
     useEffect(() => {
         if(!user){
@@ -45,6 +44,7 @@ const Shipping = () => {
     }
     return (
         <Layout title="Shipping">
+            <CheckoutWizard activeStep={1} />
             <form className={styles.form} onSubmit={handleSubmit(submitShipping)}>
                 <Typography component='h2' variant='h2'>
                     Shipping
