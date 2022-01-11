@@ -1,7 +1,7 @@
 import { Link, Button, List, ListItem, TextField, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css'
-
+import getError from '../utils/formatError';
 import Cookies from "js-cookie";
 import axios from 'axios';
 import {useForm, Controller} from 'react-hook-form';
@@ -33,8 +33,8 @@ const Login = () => {
             Cookies.set('user', JSON.stringify(data));
             router.push(redirect || '/');
 
-        }catch(e){
-            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:2000 })
+        }catch(error){
+            enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:2000 })
          
         }
     }

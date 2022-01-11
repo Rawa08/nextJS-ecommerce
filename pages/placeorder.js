@@ -1,18 +1,22 @@
-import {useContext} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image'
 import {Store} from '../utils/Store';
 import Layout from '../components/Layout';
 import CheckoutWizard from '../components/CheckoutWizard';
-import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Select, MenuItem } from '@mui/material';
+import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, CircularProgress } from '@mui/material';
 import styles from  '../styles/App.module.css';
 import dynamic from 'next/dynamic';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import getError from '../utils/formatError';
 
 
 const Order = () => {
     const router = useRouter();
-    const {state:{cart: {cartItems, shippingAddress, paymentMethod}}, dispatch} = useContext(Store);
+    const {state:{cart: {cartItems, shippingAddress, paymentMethod}, user}, dispatch} = useContext(Store);
 
 
     useEffect(() => {
@@ -21,14 +25,52 @@ const Order = () => {
          }
         
     }, []);
- 
+    
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    const [loading, setLoading] = useState(false);
+
     const roundPrice = num => (Math.round(num * 100 + Number.EPSILON)/100);
 
     const itemsPrice = roundPrice(cartItems.reduce((acc, curr)=> acc + (curr.quantity * curr.price), 0));
     const vatAmount = roundPrice(itemsPrice * 0.2);
     const shippingPrice = itemsPrice > 200 ? 0 : 4.9;
     const totalPrice = roundPrice((itemsPrice+shippingPrice)); 
-  
+    
+    const submitOrder = async () => {
+        closeSnackbar();
+
+
+
+        try {
+            setLoading(true);
+            const {data} = await axios.post(`/api/orders`, {
+                orderItems: cartItems,
+                shippingAddress,
+                paymentMethod,
+                itemsPrice,
+                vatAmount,
+                shippingPrice,
+                totalPrice
+            },{
+                headers:{
+                    authorization: `Bearer ${user.token}`
+                },
+            });
+
+            dispatch({type:'CART_CLEAR'});
+            Cookies.remove('cartItems');
+            setLoading(false);
+            router.push(`/order/${data.order._id}`)
+
+        } catch (error) {
+            setLoading(false);
+           
+            enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 });
+        }
+    };
+
+
     return (
         <Layout title="Order">
             <CheckoutWizard activeStep={3}/>
@@ -175,8 +217,10 @@ const Order = () => {
                                   </ListItem>
                            
                                   <ListItem>
-                                      <Button variant='contained' color='secondary' fullWidth >Place Order</Button> 
+                                      <Button variant='contained' color='secondary' fullWidth onClick={submitOrder} >Place Order</Button> 
                                   </ListItem>
+                                  {loading && <ListItem>
+                                      <CircularProgress /></ListItem>}
                               </List>
                           </Card>
                       </Grid>

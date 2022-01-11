@@ -5,7 +5,7 @@ import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from "js-cookie";
 import axios from 'axios';
-
+import getError from '../utils/formatError';
 import { useContext} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
@@ -47,8 +47,8 @@ const Register = () => {
             Cookies.set('user', JSON.stringify(data));
             router.push(redirect || '/');
 
-        }catch(e){
-            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:3000 })
+        }catch(error){
+            enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })
         }
     }
     }
