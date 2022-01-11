@@ -5,7 +5,7 @@ import styles from '../styles/App.module.css'
 import Cookies from "js-cookie";
 import axios from 'axios';
 import {useForm, Controller} from 'react-hook-form';
- 
+import { useSnackbar } from 'notistack';
 import { useContext} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
@@ -13,7 +13,7 @@ import { Store } from "../utils/Store";
 
 const Login = () => {
     const {handleSubmit, control, formState:{errors}} = useForm();
-
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const {state, dispatch} = useContext(Store);
     const {user} = state;
 
@@ -26,7 +26,7 @@ const Login = () => {
     };
 
     const submitLogin = async ({email, password}) => {
-
+        closeSnackbar();
         try{
             const {data} = await axios.post(`/api/users/login`, {email, password});
             dispatch({type:'USER_LOGIN', payload: data});
@@ -34,7 +34,8 @@ const Login = () => {
             router.push(redirect || '/');
 
         }catch(e){
-           console.log(e.response.data ? e.response.data.message : e.message)
+            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:2000 })
+         
         }
     }
     return (
@@ -56,7 +57,7 @@ const Login = () => {
                         render={({field}) => (
                             <TextField variant='outlined' fullWidth id="email" label='Email' inputProps={{type:'email'}}
                             error={Boolean(errors.email)}
-                            helperText={errors.email ? errors.email.type === 'pattern' ? 'Email is not valid' : 'Email is requierd':''} {...field}></TextField>
+                            helperText={errors.email ? errors.email.type === 'pattern' ? 'Email is not valid' : 'Email is required':''} {...field}></TextField>
                         )}>
                         
                         </Controller>    
@@ -73,7 +74,7 @@ const Login = () => {
                         render={({field}) => (
                             <TextField variant='outlined' fullWidth id="password" label='Password' inputProps={{type:'password'}}
                             error={Boolean(errors.password)}
-                            helperText={errors.password ? errors.password.type === 'minLength' ? 'Password is to Short' : 'Password is requierd':''} {...field}></TextField>
+                            helperText={errors.password ? errors.password.type === 'minLength' ? 'Password is to Short' : 'Password is required':''} {...field}></TextField>
                         )}>
                         
                         </Controller> 

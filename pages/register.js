@@ -2,10 +2,11 @@ import { Link, Button, List, ListItem, TextField, Typography } from "@mui/materi
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
+import { useSnackbar } from 'notistack';
 import Cookies from "js-cookie";
 import axios from 'axios';
 
-import { useContext, useState} from 'react';
+import { useContext} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Store } from "../utils/Store";
@@ -22,15 +23,17 @@ const Register = () => {
         router.push(redirect || '/');
     };
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
     const {handleSubmit, control, formState:{errors}} = useForm();
 
 
     const submitRegister = async (fields) => {
-        
+        closeSnackbar();
         const {fullName, email, password, passwordConfirm} = fields;
 
         if(password !== passwordConfirm){
-            alert("Password don't match!");
+            enqueueSnackbar("Password doesn't match", { variant: 'error', autoHideDuration:1500 })
             return;
         }
         else {
@@ -42,7 +45,7 @@ const Register = () => {
             router.push(redirect || '/');
 
         }catch(e){
-           console.log(e.response.data ? e.response.data.message : e.message)
+            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:2000 })
         }
     }
     }
@@ -81,7 +84,7 @@ const Register = () => {
                         render={({field}) => (
                             <TextField variant='outlined' fullWidth id="email" label='Email' inputProps={{type:'email'}}
                             error={Boolean(errors.email)}
-                            helperText={errors.email ? errors.email.type === 'pattern' ? 'Email is not valid' : 'Email is requierd':''} {...field}></TextField>
+                            helperText={errors.email ? errors.email.type === 'pattern' ? 'Email is not valid' : 'Email is required':''} {...field}></TextField>
                         )}>
                         
                         </Controller>   
@@ -89,13 +92,13 @@ const Register = () => {
                     <ListItem>
                         <Controller name="password" control={control} defaultValue="" rules={{required:true,minLength:6,}}
                         render={({field}) => (<TextField variant='outlined' fullWidth id="password" label='Password' inputProps={{type:'password'}} error={Boolean(errors.password)}
-                        helperText={errors.password ? errors.password.type === 'minLength' ? 'Password to short' : 'Password is requierd':''} {...field}></TextField>)}></Controller>
+                        helperText={errors.password ? errors.password.type === 'minLength' ? 'Password to short' : 'Password is required':''} {...field}></TextField>)}></Controller>
                     
                     </ListItem>
                     <ListItem>
                         <Controller name="passwordConfirm" control={control} defaultValue="" rules={{required:true,minLength:6,}}
                         render={({field}) => (<TextField variant='outlined' fullWidth id="passwordConfirm" label='Password Confirmation' inputProps={{type:'password'}} error={Boolean(errors.passwordConfirm)}
-                        helperText={errors.passwordConfirm ? errors.passwordConfirm.type === 'minLength' ? 'Password Confirmation is to short' : 'Password Confirmation is requierd':''} {...field}></TextField>)}></Controller>
+                        helperText={errors.passwordConfirm ? errors.passwordConfirm.type === 'minLength' ? 'Password Confirmation is to short' : 'Password Confirmation is required':''} {...field}></TextField>)}></Controller>
                     
                     </ListItem>
                     <ListItem>
