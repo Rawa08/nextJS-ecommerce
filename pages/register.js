@@ -45,7 +45,7 @@ const Register = () => {
             router.push(redirect || '/');
 
         }catch(e){
-            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:2000 })
+            enqueueSnackbar(e.response.data ? e.response.data.message : e.message, { variant: 'error', autoHideDuration:3000 })
         }
     }
     }
