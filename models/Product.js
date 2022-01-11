@@ -11,7 +11,9 @@ const productSchema = new moongose.Schema({
     rating: {
       rate: {type: Number},
       count: {type: Number}
-    }
+    },
+    outOfStock: {type: Boolean, required: true, default:false},
+    popularity:{type: Number, required: true, default:1},
 },{
     timestamps:true
 });
