@@ -40,7 +40,7 @@ const UserMenu = ({ userInfo }) => {
         className={styles.navButton}
         
       >
-        {userInfo.name}
+        {userInfo.fullName}
       </Button>
       <Menu
         id="simple-menu"

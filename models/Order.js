@@ -3,6 +3,7 @@ import moongose from 'mongoose';
 const orderSchema = new moongose.Schema({
    
   user:{type: moongose.Schema.Types.ObjectId, ref:'User', required:true},
+  
   orderItems: [
     {title: {type: String, required:true}, 
     brand:{type: String, required: true, default:'Unknown Manufacturer'},
@@ -29,6 +30,6 @@ const orderSchema = new moongose.Schema({
     timestamps:true
 });
 
-const Order = moongose.models.Product || moongose.model('Order', orderSchema);
+const Order = moongose.models.Order || moongose.model('Order', orderSchema);
 
 export default Order;

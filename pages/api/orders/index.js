@@ -12,14 +12,20 @@ const handler = nc({
 handler.use(isAuth);
 
 handler.post(async (req,res) => {
-    console.log(req.body)
-    await db.connectDb();
-    console.log(req.body)
-    const newOrder = new Order({...req.body, user:req.user._id});
 
-    const order = await newOrder.save();
-
-    res.status(201).send(order)
+    if(req.body.orderItems){
+        await db.connectDb();
+    
+        const newOrder = new Order({
+            ...req.body,
+            user: req.user._id,
+          });
+          const order = await newOrder.save();
+          res.status(201).send(order);
+    }else {
+        res.status(400).send({message: 'No order Items'});
+    }
+  
 
 
 });

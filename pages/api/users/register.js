@@ -34,7 +34,7 @@ handler.post(async (req, res) => {
     res.send({
         token,
         _id: user._id,
-        name: user.fullName,
+        fullName: user.fullName,
         email: user.email,
         isAdmin: user.isAdmin
     });
