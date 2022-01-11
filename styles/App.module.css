@@ -37,6 +37,10 @@
   text-align: center;
 }
 
+.homeContainer{
+  margin-top: 15px !important;
+}
+
 .productImage{
   max-width: 100% !important;
   height: 400px !important;

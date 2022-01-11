@@ -21,7 +21,7 @@ export default function Home({products}) {
 
   return (
      <Layout title="My E-commerce">
-       <Grid container spacing={3}>
+       <Grid container spacing={1} className={styles.homeContainer}>
         {products.map(product => {
  
           return (
@@ -39,7 +39,8 @@ export default function Home({products}) {
            
                 <CardActions>
                   <Typography>$ {product.price}</Typography>
-                  <Button size='small' color="primary" onClick={()=>addToCart(product)}> Add to Bag</Button>
+                  {product.outOfStock ?<Button size='small' color="primary" disabled> Product is Out of Stock</Button> : <Button size='small' color="primary" onClick={()=>addToCart(product)}> Add to Bag</Button>}
+                  
                 </CardActions>
               
               
