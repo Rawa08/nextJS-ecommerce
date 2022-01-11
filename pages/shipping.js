@@ -11,7 +11,7 @@ import { Store } from "../utils/Store";
 import CheckoutWizard from "../components/CheckoutWizard";
 
 const Shipping = () => {
-    const {state, state:{user, cart:{shippingAddress}}, dispatch} = useContext(Store);
+    const {state:{user, cart:{shippingAddress}}, dispatch} = useContext(Store);
    
     const {handleSubmit, control, formState:{errors}, setValue} = useForm();
     const router = useRouter();
@@ -46,7 +46,7 @@ const Shipping = () => {
         <Layout title="Shipping">
             <CheckoutWizard activeStep={1} />
             <form className={styles.form} onSubmit={handleSubmit(submitShipping)}>
-                <Typography component='h2' variant='h2'>
+                <Typography component='h3' variant='h3'>
                     Shipping
                 </Typography>
                 <List>

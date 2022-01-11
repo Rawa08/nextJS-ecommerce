@@ -18,7 +18,7 @@ const Cart = () => {
     const checkoutHandler = () => router.push('/shipping')
     return (
         <Layout title="Cart">
-            <Typography component='h3' variant='h3'>Shopping Cart</Typography>
+            <Typography component='h3' variant='h3' className={styles.h3}>Shopping Cart</Typography>
 
             {cartItems.length < 1 ? 
                        <div className={styles.section}>

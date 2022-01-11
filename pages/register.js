@@ -12,16 +12,19 @@ import NextLink from 'next/link';
 import { Store } from "../utils/Store";
 
 const Register = () => {
-    const {state, dispatch} = useContext(Store);
-    const {user} = state;
+   
+    const {state:{user}, dispatch} = useContext(Store);
+    
 
     const router = useRouter();
     const {redirect} = router.query;
+
 
     if(user){
         
         router.push(redirect || '/');
     };
+
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -52,7 +55,7 @@ const Register = () => {
     return (
         <Layout title="Register">
             <form className={styles.form} onSubmit={handleSubmit(submitRegister)}>
-                <Typography component='h2' variant='h2'>
+                <Typography component='h3' variant='h3'>
                     Register
                 </Typography>
                 <List>

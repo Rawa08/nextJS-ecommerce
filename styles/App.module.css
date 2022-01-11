@@ -49,10 +49,19 @@
 
 .form{
   max-width: 800px;
-  margin: 0 auto;
+  margin: 20px auto;
+}
+
+.form h3, .h3{
+  margin: 25px auto !important;
+  text-align: center;
 }
 
 .navButton{
   color:#fff !important;
   text-transform:initial !important;
+}
+
+.wizard{
+  margin: 25px 0;
 }

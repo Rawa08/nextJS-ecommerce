@@ -41,7 +41,7 @@ const Login = () => {
     return (
         <Layout title="Login">
             <form className={styles.form} onSubmit={handleSubmit(submitLogin)}>
-                <Typography component='h2' variant='h2'>
+                <Typography component='h3' variant='h3'>
                     Login
                 </Typography>
                 <List>
