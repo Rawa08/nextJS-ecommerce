@@ -21,9 +21,9 @@ handler.put(async (req, res) => {
 
     user.fullName = fullName.length > 1 ? fullName : user.fullName;
     user.email = email.length > 3 ? email : user.email;
-    user.password = password.length > 5 ? bcrypt.hashSync(password, 10) : user.fullName;
+    user.password = password.length > 5 ? bcrypt.hashSync(password, 10) : user.password;
     
-    user.save();
+    await user.save();
 
     await db.disconnectDb();
 

@@ -32,12 +32,14 @@ const Profile = () => {
 
 useEffect(() => {
     if (!user) {
-      router.push('/login');
+      return router.push('/login');
     }
+    setValue('fullName', user.fullName);
+    setValue('email', user.email);
   }, []);
 
 
-const {handleSubmit, control, formState:{errors}} = useForm();
+const {handleSubmit, control, formState:{errors}, setValue} = useForm();
 const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 const submitRegister = async (fields) => {
@@ -51,7 +53,9 @@ const submitRegister = async (fields) => {
     else {
 
     try{
-        const {data} = await axios.put(`/api/users/profile`, {fullName,email, password});
+        const {data} = await axios.put(`/api/users/profile`, {fullName,email, password}, {
+            headers:{authorization: `Bearer ${user.token}`}
+        });
         dispatch({type:'USER_LOGIN', payload: data});
         Cookies.set('user', JSON.stringify(data));
         enqueueSnackbar('Your Profile updated successfully',{ variant: 'success', autoHideDuration:1800 } )
