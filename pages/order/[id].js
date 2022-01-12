@@ -43,7 +43,7 @@ const OrderDetail = ({params}) => {
     //Order detail state
     const [{loading, error, order}, dispatch] = useReducer(reducer, {loading:true, error:'', order:{}});
     
-    const {shippingAddress, paymentMethod, orderItems, itemsPrice, shippingPrice, totalPrice} = order;
+    const {shippingAddress, paymentMethod, orderItems, itemsPrice, shippingPrice, totalPrice, vatAmount} = order;
 
     useEffect(() => {
         if(!user){
@@ -96,12 +96,17 @@ const OrderDetail = ({params}) => {
                                       <Typography component='h6' variant='h6'>Shipping Address</Typography>
                                   </ListItem>
                                   <ListItem>
+                                      To: &nbsp;
                                   {shippingAddress.fullName} &nbsp; -  &nbsp;
                                   {shippingAddress.address}   &nbsp; - &nbsp;
                                   {shippingAddress.postalCode} &nbsp; -&nbsp;
                                   {shippingAddress.city}    &nbsp; -&nbsp;
                                   {shippingAddress.country} 
                                   </ListItem>    
+                                  <ListItem>
+                                      Status: {order.isDeliverd ? `Deliverd at ${order.deliverdAt}` : 'Not Deliverd'}
+                                     
+                                  </ListItem>   
                                   
                                   
                                 </List>
@@ -116,7 +121,10 @@ const OrderDetail = ({params}) => {
                                  <Typography paragraph={true}> {paymentMethod}</Typography>
                                   </ListItem>    
                                   
-                                  
+                                  <ListItem>
+                                      Status: {order.isPaid? `Deliverd at ${order.paidAt}` : 'Not Paid'}
+                                     
+                                  </ListItem>   
                                 </List>
                         </Card>
 
