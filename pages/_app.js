@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import {useEffect} from 'react'
 import { StoreProvider } from '../utils/Store';
 import {SnackbarProvider} from 'notistack';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function MyApp({ Component, pageProps }) {
 
@@ -16,8 +17,14 @@ function MyApp({ Component, pageProps }) {
   },[]);
 
   
-return (<SnackbarProvider maxSnack={2} anchorOrigin={{vertical: 'top', horizontal: 'center'}} >
-  <StoreProvider><Component {...pageProps} /></StoreProvider></SnackbarProvider>)
+return (
+<SnackbarProvider maxSnack={2} anchorOrigin={{vertical: 'top', horizontal: 'center'}} >
+  <PayPalScriptProvider deferLoading={true}>
+    <StoreProvider>
+      <Component {...pageProps} />
+    </StoreProvider>
+  </PayPalScriptProvider>
+</SnackbarProvider>)
 }
 
 export default MyApp
