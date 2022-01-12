@@ -4,7 +4,10 @@ import styles from  '../styles/App.module.css';
 import {getError} from '../utils/formatError';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+import Cookies from 'js-cookie';
+import {Store} from '../utils/Store';
+
 
 
 
@@ -13,6 +16,8 @@ const PayPal = ({user, order}) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
+
+    const {dispatch} = useContext(Store);
 
     const loadPaypalScript = async () => {
         const {data: clientId} = await axios.get(`/api/keys/paypal`, {
@@ -53,7 +58,9 @@ const PayPal = ({user, order}) => {
                     headers:{ authorization: `Bearer ${user.token}`},
                 });
                 
-                enqueueSnackbar('Order is paid', {variant:'success', autoHideDuration:2500})
+                enqueueSnackbar('Order is paid', {variant:'success', autoHideDuration:2500});
+                dispatch({type:'CART_CLEAR'});
+                Cookies.remove('cartItems');
                 
             }
             catch(err){

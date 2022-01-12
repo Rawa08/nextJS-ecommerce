@@ -18,6 +18,7 @@ const OrderDetail = ({params}) => {
 
     const orderId = params.id;
     const router = useRouter();
+    const {redirect} = router.query;
     const {state:{user}} = useContext(Store);
     
     const [loading, setLoading] = useState(false);
@@ -65,7 +66,15 @@ const OrderDetail = ({params}) => {
         
     }, [order]);
 
-  
+  const goBack = () =>{
+      if(redirect) {
+          return router.push(redirect);
+      }
+      if(order.isPaid){
+          return router.push('/');
+      }
+      else router.push('/placeorder')
+  }
     
     return (
         <Layout title="Order Detail">
@@ -219,10 +228,10 @@ const OrderDetail = ({params}) => {
                                           </Grid>
                                       </Grid>
                                   </ListItem>
-                                        <PayPal user={user} order={order} />
+                                      {!order.isPaid && order.paymentMethod === 'PayPal' && <PayPal user={user} order={order} />}  
                          
                                   <ListItem>
-                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={() => router.push('/payment')}>Back</Button>
+                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={goBack}>Back</Button>
                     </ListItem>
                            
                               </List>

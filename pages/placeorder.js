@@ -65,8 +65,7 @@ const Order = () => {
             });
             
 
-            dispatch({type:'CART_CLEAR'});
-            Cookies.remove('cartItems');
+
             setLoading(false);
             router.push(`/order/${data._id}`)
 
@@ -228,7 +227,7 @@ const Order = () => {
                                       <Button variant='contained' color='secondary' fullWidth onClick={submitOrder} >Place Order</Button> 
                                   </ListItem>
                                   <ListItem>
-                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={() => router.push('/payment')}>Back</Button>
+                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={() => router.push('/payment')}>Back to Payment</Button>
                     </ListItem>
                                   {loading && <ListItem>
                                       <CircularProgress /></ListItem>}

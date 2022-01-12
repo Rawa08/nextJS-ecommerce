@@ -23,7 +23,7 @@ handler.post(async (req,res) => {
           const order = await newOrder.save();
           res.status(201).send(order);
     }else {
-        res.status(400).send({message: 'No order Items'});
+        res.status(400).send({message: 'No order'});
     }
   
 

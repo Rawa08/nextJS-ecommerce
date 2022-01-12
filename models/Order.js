@@ -24,9 +24,9 @@ const orderSchema = new moongose.Schema({
   shippingPrice: {type: Number, required:true},
   totalPrice: {type: Number, required:true},
   isPaid: {type: Boolean, required:true, default:false},
-  isDeliverd: {type: Boolean, required:true, default:false},
+  isDelivered: {type: Boolean, required:true, default:false},
   paidAt: {type: Date},
-  deliverdAt: {type: Date},
+  deliveredAt: {type: Date},
 },{
     timestamps:true
 });
