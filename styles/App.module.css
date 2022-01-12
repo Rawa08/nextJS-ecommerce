@@ -59,6 +59,7 @@
 .form h3, .h3{
   margin: 25px auto !important;
   text-align: center;
+  width: 100%;
 }
 
 .navButton{
