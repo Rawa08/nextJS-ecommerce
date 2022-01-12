@@ -9,5 +9,11 @@ export const getError = err => {
 export const onError = async (err, req, res, next) => {
     await db.disconnectDb();
 
-    res.status(500).send({message: err.toString()});
+    if(err.path === '_id'){
+        return res.status(500).send({message: 'Wrong id type'});
+    }
+    else {
+        res.status(500).send({message: err.toString()});
+    }
+    
 }

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useReducer} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image'
 import Layout from '../../components/Layout';
@@ -9,27 +9,9 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import {getError} from '../../utils/formatError';
 import {Store} from '../../utils/Store';
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { useSnackbar } from 'notistack';
 
-//Order detail reducer
-const reducer = (state, action)=> {
+import PayPal from '../../components/PayPal';
 
-    console.log(action.payload)
-    switch (action.type) {
-        case 'FETCH_REQUEST':
-            return {...state, loading:true, error: ''}
-            
-        case 'FETCH_SUCCESS':
-            return {...state, loading: false, error:'', order: action.payload}
-
-        case 'FETCH_ERROR':
-            return {...state, loading: false, error: action.payload}
-    
-        default:
-            state;
-    };
-};
 
 
 const OrderDetail = ({params}) => {
@@ -37,11 +19,13 @@ const OrderDetail = ({params}) => {
     const orderId = params.id;
     const router = useRouter();
     const {state:{user}} = useContext(Store);
-
-    const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
-    //Order detail state
-    const [{loading, error, order}, dispatch] = useReducer(reducer, {loading:true, error:'', order:{}});
     
+    const [loading, setLoading] = useState(false);
+    const [order, setOrder] = useState({});
+    const [errorMessage, setErrorMessage] = useState('');
+    const [error, setError] = useState(true);
+
+       
     const {shippingAddress, paymentMethod, orderItems, itemsPrice, shippingPrice, totalPrice, vatAmount} = order;
 
     useEffect(() => {
@@ -52,79 +36,42 @@ const OrderDetail = ({params}) => {
         const fetchOrder = async () => {
 
             try{
-                dispatch({type:'FETCH_REQUEST'});
+                setLoading(true);
                 const {data} = await axios.get(`/api/orders/${orderId}`, {
                     headers:{
                         authorization: `Bearer ${user.token}`,
+                        user:user._id
                         
                       }
                 });
-                dispatch({type:'FETCH_SUCCESS', payload: data});
+                setOrder(data);
+                setLoading(false)
+                setError(false)
 
             } catch(err){
-                    
-                    dispatch({type:'FETCH_ERROR', payload: getError(err)})
+            
+                    setError(true)
+                    setErrorMessage(getError(err));
+                    setLoading(false);
             }
         };
-        if(!order._id || (order._id && order._id !== orderId)){
+        if(!order._id ||(order._id && order._id !== orderId)){
             fetchOrder();
         } else {
-            const loadPaypalScript = async () => {
-                const {data: clientId} = await axios.get(`/api/keys/paypal`, {
-                    headers:{ authorization: `Bearer ${user.token}`},
-                });
-
-                paypalDispatch({type: 'resetOptions', value: {
-                    'client-id': clientId,
-                    currency: 'USD',
-
-                }});
-                paypalDispatch({type:'setLoadingStatus', value:'pending'})
-            };
-            loadPaypalScript();
+            
+            
         }
 
         
     }, [order]);
 
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  
     
-    const createOrder = (data, actions) =>{
-        return actions.order.create({
-            purchase_units:[
-                {
-                    amount: {value: totalPrice},
-                }
-            ]
-        }).then(payPalOrderId => { return payPalOrderId} )
-    };
-
-    const onApprove =  (data, actions) =>{
-        return actions.order.capture().then(async details => {
-            try{
-                dispatch({type:'PAY_REQUEST'});
-                const {data} = await axios.put(`/api/orders/${order._id}/pay`, details, {
-                    headers:{ authorization: `Bearer ${user.token}`},
-                });
-                dispatch({type:'PAY_SUCCESS', payload:data});
-                enqueueSnackbar('Order is paid', {variant:'success'})
-                
-            }
-            catch(err){
-                dispatch({type:'PAY_FAIL', payload:getError(err)});
-                enqueueSnackbar(getError(err), {variant:'error'})
-            }
-        })
-    };
-
-    const onPayPalError = err => enqueueSnackbar(getError(err), {variant:'error'})
-
-
     return (
         <Layout title="Order Detail">
             <Typography component='h3' variant='h3' className={styles.h3}>Order: {orderId}</Typography>
 
-                {loading ? (<CircularProgress />) : error ? <Typography className={styles.error}>{error}</Typography>:
+                {loading ? (<CircularProgress />) : error ? <Typography className={styles.error}>{errorMessage}</Typography>:
             
                   <Grid container spacing={1}>
            
@@ -162,7 +109,7 @@ const OrderDetail = ({params}) => {
                                   </ListItem>    
                                   
                                   <ListItem>
-                                      Status: {order.isPaid? `Deliverd at ${order.paidAt}` : 'Not Paid'}
+                                      Status: {order.isPaid? `Paid at ${order.paidAt}` : 'Not Paid'}
                                      
                                   </ListItem>   
                                 </List>
@@ -272,10 +219,7 @@ const OrderDetail = ({params}) => {
                                           </Grid>
                                       </Grid>
                                   </ListItem>
-                                        <ListItem>
-                                            {isPending ? <CircularProgress /> : <PayPalButtons createOrder={createOrder}
-                                            onApprove={onApprove} onError={onPayPalError}></PayPalButtons>}
-                                        </ListItem>
+                                        <PayPal user={user} order={order} />
                          
                                   <ListItem>
                         <Button variant='outlined' color='secondary' type='button' fullWidth onClick={() => router.push('/payment')}>Back</Button>
