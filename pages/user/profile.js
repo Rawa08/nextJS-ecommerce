@@ -3,9 +3,9 @@ import {useRouter} from 'next/router';
 import NextLink from 'next/link';
 import React, { useEffect, useContext} from 'react';
 import axios from 'axios';
-import { Store } from '../utils/Store';
-import { getError } from '../utils/formatError';
-import Layout from '../components/Layout';
+import { Store } from '../../utils/Store';
+import { getError } from '../../utils/formatError';
+import Layout from '../../components/Layout';
 import {
   Card,
   List,
@@ -16,7 +16,7 @@ import {
   ListItemText,
   TextField
 } from '@mui/material';
-import styles from '../styles/App.module.css';
+import styles from '../../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
@@ -87,12 +87,12 @@ const sendEmail = async () => {
         <Grid item md={2} xs={12}>
           <Card className={styles.section}>
               <List>
-                  <NextLink href={'/profile'} passHref>
+                  <NextLink href={'/user/profile'} passHref>
                       <ListItem button selected component='a'>
                           <ListItemText primary='User Profile'></ListItemText>
                       </ListItem>
                   </NextLink>
-                  <NextLink href={'/order-history'} passHref>
+                  <NextLink href={'/order/order-history'} passHref>
                       <ListItem button  component='a'>
                           <ListItemText primary='Order History'></ListItemText>
                       </ListItem>

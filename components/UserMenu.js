@@ -51,10 +51,10 @@ const UserMenu = ({ userInfo }) => {
     
         
       >
-        <MenuItem onClick={(e) => loginMenuCloseHandler(e, '/profile')}>
+        <MenuItem onClick={(e) => loginMenuCloseHandler(e, '/user/profile')}>
           Profile
         </MenuItem>
-        <MenuItem onClick={(e) => loginMenuCloseHandler(e, '/order-history')}>
+        <MenuItem onClick={(e) => loginMenuCloseHandler(e, '/order/order-history')}>
           Order Hisotry
         </MenuItem>
         {userInfo.isAdmin && (

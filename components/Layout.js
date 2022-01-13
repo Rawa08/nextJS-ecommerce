@@ -42,7 +42,7 @@ const Layout = ({title,description, children}) => {
             <Container className={styles.main}>{children}</Container>
  
             <footer className={styles.footer}>
-                <Typography>All rightsreservd. www.rawa.se</Typography>
+                <Typography>All rights reserved. www.rawa.se</Typography>
             </footer>
         </div>
     )

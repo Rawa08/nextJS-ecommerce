@@ -3,9 +3,9 @@ import {useRouter} from 'next/router';
 import NextLink from 'next/link';
 import React, { useEffect, useContext, useState } from 'react';
 import axios from 'axios';
-import { Store } from '../utils/Store';
-import { getError } from '../utils/formatError';
-import Layout from '../components/Layout';
+import { Store } from '../../utils/Store';
+import { getError } from '../../utils/formatError';
+import Layout from '../../components/Layout';
 import {
   Card,
   List,
@@ -23,7 +23,7 @@ import {
   CircularProgress,
   ListItemText,
 } from '@mui/material';
-import styles from '../styles/App.module.css';
+import styles from '../../styles/App.module.css';
 
 
 const OrderHistory = () => {
@@ -67,12 +67,12 @@ const [orders, setOrders] = useState([])
         <Grid item md={3} xs={12}>
           <Card className={styles.section}>
               <List>
-                  <NextLink href={'/profile'} passHref>
+                  <NextLink href={'/user/profile'} passHref>
                       <ListItem button component='a'>
                           <ListItemText primary='User Profile'></ListItemText>
                       </ListItem>
                   </NextLink>
-                  <NextLink href={'/order-history'} passHref>
+                  <NextLink href={'/order/order-history'} passHref>
                       <ListItem button selected component='a'>
                           <ListItemText primary='Order History'></ListItemText>
                       </ListItem>
