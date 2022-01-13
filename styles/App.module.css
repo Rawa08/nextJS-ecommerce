@@ -28,8 +28,7 @@
     color:#7f2d6e !important;}  
 
 .main {
-  min-height: 80vh;
- 
+  min-height: 80vh; 
 }
 
 .footer{
@@ -77,5 +76,18 @@
 }
 
 .fullWidth{
+ 
   width: 100%;
 }
+
+.flexCenter  {
+  display: flex;
+  justify-content: center !important;
+  
+}
+
+
+.restSection{
+ margin-top: 80px;
+}
+

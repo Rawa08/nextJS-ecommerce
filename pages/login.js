@@ -1,4 +1,4 @@
-import { Link, Button, List, ListItem, TextField, Typography } from "@mui/material";
+import { Link, Button, List, ListItem, TextField, Typography, TableCell } from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css'
 import{ getError }from '../utils/formatError';
@@ -84,8 +84,12 @@ const Login = () => {
                         <Button variant='contained' color='secondary' type='submit' fullWidth>Sign in</Button>
                     </ListItem>
                     <ListItem>
-                     Don&apos;t have an account? &nbsp; <NextLink href={`/register?redirect=${redirect || '/'}`} passHref><Link>Get one here</Link></NextLink>
+                     <Typography >Don&apos;t have an account? &nbsp; <NextLink href={`/register?redirect=${redirect || '/'}`} passHref><Link>Get one here</Link></NextLink></Typography>
+
                     </ListItem>
+                    <ListItem style={{display:'flex', justifyContent:'flex-end'}}>
+                     <Typography variant="subtitle2"><NextLink href='/user/forgot' passHref><Link>Forgot password</Link></NextLink></Typography>
+                     </ListItem>
                 </List>
             </form>
         </Layout>

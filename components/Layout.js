@@ -21,7 +21,7 @@ const Layout = ({title,description, children}) => {
                 <title>{title}</title>
                 {description && <meta name="description" content={description} />}
             </Head>
-            <AppBar position='static' className={styles.navBar}>
+            <AppBar position='sticky' className={styles.navBar}>
                 <Toolbar>
                     <NextLink href="/" passHref><Link><Typography className={styles.brand}>My E-commerce</Typography>
                     </Link></NextLink>
