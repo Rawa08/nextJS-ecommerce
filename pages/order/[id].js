@@ -9,7 +9,6 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import {getError} from '../../utils/formatError';
 import {Store} from '../../utils/Store';
-import Stripe from '../../components/Stripe';
 import PayPal from '../../components/PayPal';
 
 

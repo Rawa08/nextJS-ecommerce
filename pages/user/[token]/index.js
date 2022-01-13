@@ -3,9 +3,9 @@ import {useRouter} from 'next/router';
 import NextLink from 'next/link';
 import React, { useEffect, useContext} from 'react';
 import axios from 'axios';
-import { Store } from '../../utils/Store';
-import { getError } from '../../utils/formatError';
-import Layout from '../../components/Layout';
+import { Store } from '../../../utils/Store';
+import { getError } from '../../../utils/formatError';
+import Layout from '../../../components/Layout';
 import {
   Card,
   List,
@@ -16,7 +16,7 @@ import {
   ListItemText,
   TextField
 } from '@mui/material';
-import styles from '../../styles/App.module.css';
+import styles from '../../../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
@@ -30,13 +30,12 @@ const Profile = () => {
 
 
 
-useEffect(() => {
-    if (!user) {
-      return router.push('/login');
-    }
-    setValue('fullName', user.fullName);
-    setValue('email', user.email);
-  }, []);
+// useEffect(() => {
+//     if (!user) {
+//       return router.push('/login');
+//     }
+  
+//   }, []);
 
 
 const {handleSubmit, control, formState:{errors}, setValue} = useForm();

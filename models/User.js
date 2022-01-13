@@ -4,6 +4,8 @@ const userSchema = moongose.Schema({
     fullName: {type: String, required:true},
     email: {type: String, required:true},
     password: {type: String, required:true},
+    token: {type: String},
+    tokenDate: {type: Date},
     isAdmin:{type: Boolean, default:false, required: true}
 },{
     timestamps:true
