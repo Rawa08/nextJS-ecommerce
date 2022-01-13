@@ -67,6 +67,19 @@ const submitRegister = async (fields) => {
 }
 }
 
+const sendEmail = async () => {
+    try {
+        const {data} = await axios.post('/api/email/send', {
+          to: 'mail@mail.com', subject: 'Testing sendGrid', htmlContent:'<h1>HTML CONTENT</h1>', text: 'text content in mail body'
+        },{
+          headers:{authorization: `Bearer ${user.token}`}
+        });
+        enqueueSnackbar(data.message, { variant: 'success', autoHideDuration:3000 });
+    } catch (error) {
+      enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })
+    }
+
+}
 
   return (
     <Layout title="Profile">
@@ -156,6 +169,9 @@ const submitRegister = async (fields) => {
                         <Button variant='contained' color='secondary' type='submit' fullWidth>Update</Button>
                     </ListItem>
                  
+                    <ListItem>
+                        <Button variant='contained' color='secondary' type='button' fullWidth onClick={sendEmail}>Test Email</Button>
+                    </ListItem>
                 </List>
             </form>
               
