@@ -50,8 +50,8 @@ const Payment = () => {
                         <FormControl component='fieldset'>
                             <RadioGroup aria-label='Payment Method' name='paymentMethod' value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} >
                                 <FormControlLabel label='PayPal' value='PayPal' control={<Radio />}></FormControlLabel>
-                                <FormControlLabel label='Card Payment' value='Stripe' control={<Radio />}></FormControlLabel>
-                                <FormControlLabel label='Pay with Klarna' value='Klarna' control={<Radio />}></FormControlLabel>
+                               
+                                <FormControlLabel label='Cash' value='Cash' control={<Radio />}></FormControlLabel>
                             </RadioGroup>
                         </FormControl>
                     </ListItem>

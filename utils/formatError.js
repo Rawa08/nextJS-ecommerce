@@ -8,8 +8,7 @@ export const getError = err => {
 
 export const onError = async (err, req, res, next) => {
     await db.disconnectDb();
-
- 
+    
     res.status(500).send({message: err.toString()});
     
 }
