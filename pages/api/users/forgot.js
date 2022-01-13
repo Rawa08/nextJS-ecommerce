@@ -13,9 +13,10 @@ handler.post(async (req, res)=> {
     const {email} = req.body;
     await db.connectDb();
     const user = await User.findOne({email});
-    await db.disconnectDb();
+   
     
     if(!user){ 
+        await db.disconnectDb();
         res.status(404).send({message:`${email} is not registerd!`})}
     else {
         const token = "TestToken";
@@ -23,10 +24,10 @@ handler.post(async (req, res)=> {
         await sendgrid.send({
             to:email, from: adminEmail, subject:"Password recovery", html: "<a href="+`http://localhost:3000/user/${token}`+"?user="+`${user._id}`+" >Recover your password</a>"
         });
-        user.token = 'token1';
+        user.token = token;
         user.tokenDate = Date.now();
         await user.save();
-        //send token
+        await db.disconnectDb();
         res.status(200).send({message:'Password recovery send to your email'})}
 })
 
