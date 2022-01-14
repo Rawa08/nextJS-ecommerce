@@ -20,13 +20,13 @@ const Order = () => {
 
 
     useEffect(() => {
-        if(!paymentMethod){
-            router.push('/payment')
+        if(!paymentMethod || !shippingAddress){
+            return router.push('/shipping')
          }
          
          if(cartItems.length <1){
             
-            router.push('/')
+            return router.push('/')
          }
         
     }, []);
@@ -64,8 +64,8 @@ const Order = () => {
                   }
             });
             
-
-
+            dispatch({type:'CART_CLEAR'});
+            Cookies.remove('cartItems');
             setLoading(false);
             router.push(`/order/${data._id}`)
 

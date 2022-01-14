@@ -18,16 +18,19 @@ const Shipping = () => {
 
     useEffect(() => {
         if(!user){
-            router.push('/login?redirect=/shipping')
+            return router.push('/login?redirect=/shipping')
          }
 
-         const {fullName, address, city, postalCode, country} = shippingAddress;
+         if(shippingAddress){
+            const {fullName, address, city, postalCode, country} = shippingAddress;
 
-         setValue('fullName',fullName);
-         setValue('address',address);
-         setValue('city',city);
-         setValue('postalCode', postalCode);
-         setValue('country', country)
+            setValue('fullName',fullName);
+            setValue('address',address);
+            setValue('city',city);
+            setValue('postalCode', postalCode);
+            setValue('country', country)
+         }
+        
         
     }, []);
 
