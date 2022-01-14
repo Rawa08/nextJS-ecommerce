@@ -4,8 +4,7 @@ import Image from 'next/image'
 import {Store} from '../utils/Store';
 import Layout from '../components/Layout';
 import CheckoutWizard from '../components/CheckoutWizard';
-import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, 
-    TableHead, TableRow, TableCell, TableBody, CircularProgress } from '@mui/material';
+import {Card, List, ListItem, Button, Typography, Link, Grid,  CircularProgress } from '@mui/material';
 import styles from  '../styles/App.module.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -124,52 +123,34 @@ const Order = () => {
                                       <Typography component='h5' variant='h5'>Order Items</Typography>
                                   </ListItem>
                                   <ListItem>
-                                  <TableContainer>
-                              <Table>
-                                  <TableHead>
-                                      <TableRow>
-                                          <TableCell>
-                                              Image
-                                          </TableCell>
-                                          <TableCell>
-                                              Name
-                                          </TableCell>
-                                          <TableCell align='right'>
-                                              Quantity
-                                          </TableCell>
-                                          <TableCell align='right'>
-                                              Price
-                                          </TableCell>
-                                       
-                                      </TableRow>
-                                  </TableHead>
-                                  <TableBody>
+                                  <Grid item md={12} xs={12} mt={4}>
                                       {cartItems.map(item => (
-                                          <TableRow key={item._id}>
-                                              <TableCell >
+                                           <Grid container xs={12} md={12} spacing={2} key={item._id}  justifyContent="center"
+                                           alignItems="center" mt={2}>
+                                          <Grid item xs={2} md={3}>
                                                   <NextLink href={`/product/${item._id}`} passHref>
                                                       <Link>
                                                       <Image src={item.image} width={50} height={50}  alt={item.title} objectFit='contain' layout='responsive' priority='false' ></Image>
                                                       </Link>
                                                   </NextLink>
-                                              </TableCell>
-                                              <TableCell>
+                                              </Grid>
+                                              <Grid item xs={5} md={4}>
                                               <NextLink href={`/product/${item._id}`} passHref>
                                                       <Link>
-                                                      <Typography>{item.title}</Typography>
+                                                      <Typography>{ item.title.length > 20 ? (item.title.slice(0,20) + '...'): item.title}</Typography>
                                                       </Link>
                                                   </NextLink>
-                                              </TableCell>
-                                              <TableCell align='right'>
-                                          {item.quantity}
-                                              </TableCell>
-                                              <TableCell align='right'>{item.price}</TableCell>
-                                             
-                                          </TableRow>
+                                              </Grid>
+                                              <Grid item xs={2} md={2}>
+                                          {item.quantity > 1 ? `${item.quantity} pcs` :`${item.quantity} pc`} 
+                                              </Grid>
+                                              <Grid item xs={3} md={2} align='right'>
+                                              $ {item.price}
+                                                  </Grid>
+                                     
+                                          </Grid>
                                       ))}
-                                  </TableBody>
-                              </Table>
-                          </TableContainer>
+                                  </Grid>
                                   </ListItem>
                               </List>
 
