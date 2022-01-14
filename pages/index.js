@@ -25,7 +25,7 @@ export default function Home({products}) {
         {products.map(product => {
  
           return (
-            <Grid item md={4} key={product._id}> 
+            <Grid item md={4} xs={12} key={product._id}> 
             <Card>
             <NextLink href={`/product/${product._id}`} passHref>
               <CardActionArea>
