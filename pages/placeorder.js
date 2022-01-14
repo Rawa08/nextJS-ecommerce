@@ -64,7 +64,7 @@ const Order = () => {
                   }
             });
             
-            dispatch({type:'CART_CLEAR'});
+            
             setLoading(false);
             router.push(`/order/${data._id}`)
 

@@ -15,10 +15,11 @@ handler.get( async (req, res) => {
     await db.connectDb();
     const order = await Order.findById(req.query.id);
     await db.disconnectDb();
+
     if(!order){
        return res.status(404).send({message:'Wrong order id'})
     }
-    if(order && order.user.toString() !== req.headers.user){
+    if(order && order.user.toString() !== req.user._id){
         
         return res.status(403).send({message:'Wrong user'})
     }

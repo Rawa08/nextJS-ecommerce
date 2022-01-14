@@ -18,7 +18,6 @@ const OrderDetail = ({params}) => {
 
     const orderId = params.id;
     const router = useRouter();
-    const {redirect} = router.query;
     const {state:{user}} = useContext(Store);
     
     const [loading, setLoading] = useState(false);
@@ -39,11 +38,7 @@ const OrderDetail = ({params}) => {
             try{
                 setLoading(true);
                 const {data} = await axios.get(`/api/orders/${orderId}`, {
-                    headers:{
-                        authorization: `Bearer ${user.token}`,
-                        user:user._id
-                        
-                      }
+                    headers:{ authorization: `Bearer ${user.token}`}
                 });
                 setOrder(data);
                 setLoading(false)
@@ -66,15 +61,7 @@ const OrderDetail = ({params}) => {
         
     }, [order]);
 
-  const goBack = () =>{
-      if(redirect) {
-          return router.push(redirect);
-      }
-      if(order.isPaid){
-          return router.push('/');
-      }
-      else router.push('/placeorder')
-  }
+
     
     return (
         <Layout title="Order Detail">
@@ -230,9 +217,6 @@ const OrderDetail = ({params}) => {
                                   </ListItem>
                                       {!order.isPaid && order.paymentMethod === 'PayPal' && <PayPal user={user} order={order} />}  
                                       
-                                  <ListItem>
-                        <Button variant='outlined' color='secondary' type='button' fullWidth onClick={goBack}>Back</Button>
-                    </ListItem>
                            
                               </List>
                           </Card>
