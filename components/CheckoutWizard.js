@@ -1,5 +1,4 @@
 import { Stepper, Step, StepLabel } from '@mui/material';
-import { StylesContext } from '@mui/styles';
 import styles from '../styles/App.module.css';
 
 const CheckoutWizard = ({activeStep = 0}) => {

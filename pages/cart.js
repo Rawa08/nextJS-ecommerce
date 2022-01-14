@@ -19,15 +19,18 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 const Cart = () => {
+
   const router = useRouter();
+
   const { state, dispatch } = useContext(Store);
-  const {
-    cart: { cartItems },
-  } = state;
+  const { cart: { cartItems },} = state;
+
   const updateQuantity = (id, quantity) =>
     dispatch({ type: 'UPDATE_ITEM_QUANTITY', payload: { id, quantity } });
+
   const removeItem = (id) =>
     dispatch({ type: 'REMOVE_CART_ITEM', payload: { id } });
+    
   const checkoutHandler = () => router.push('/shipping');
 
 

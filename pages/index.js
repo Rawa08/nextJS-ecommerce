@@ -5,19 +5,16 @@ import NextLink from 'next/link';
 import Layout from '../components/Layout';
 import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button} from '@mui/material';
 import styles from '../styles/App.module.css';
-
 import db from '../utils/db';
 import Product from '../models/Product';
+
 
 
 export default function Home({products}) {
 
   const {dispatch} = useContext(Store);
-  const addToCart = product => {
-    
-      dispatch({type:'ADD_TO_CART', payload:{...product, quantity:1}})
-   
-  }
+
+  const addToCart = product => (dispatch({type:'ADD_TO_CART', payload:{...product, quantity:1}}));
 
   return (
      <Layout title="My E-commerce">

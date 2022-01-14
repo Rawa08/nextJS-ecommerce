@@ -45,7 +45,7 @@ const Register = () => {
             const {data} = await axios.post(`/api/users/register`, {fullName,email, password});
             dispatch({type:'USER_LOGIN', payload: data});
             Cookies.set('user', JSON.stringify(data));
-            router.push(redirect || '/');
+            return router.push(redirect || '/');
 
         }catch(error){
             enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })

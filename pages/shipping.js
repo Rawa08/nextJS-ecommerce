@@ -3,7 +3,6 @@ import {  Button, List, ListItem, TextField, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
-
 import Cookies from "js-cookie";
 import { useContext, useEffect} from 'react';
 import { useRouter } from "next/router";
@@ -11,6 +10,7 @@ import { Store } from "../utils/Store";
 import CheckoutWizard from "../components/CheckoutWizard";
 
 const Shipping = () => {
+
     const {state:{user, cart:{shippingAddress}}, dispatch} = useContext(Store);
    
     const {handleSubmit, control, formState:{errors}, setValue} = useForm();
@@ -43,7 +43,7 @@ const Shipping = () => {
 
             dispatch({type:'SAVE_SHIPPING_ADDRESS', payload: {fullName, address, city, postalCode, country}});
             Cookies.set('shippingAddress', JSON.stringify({fullName, address, city, postalCode, country}));
-            router.push('/payment');
+            return router.push('/payment');
     }
     return (
         <Layout title="Shipping">

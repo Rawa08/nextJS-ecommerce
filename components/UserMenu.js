@@ -26,7 +26,7 @@ const UserMenu = ({ userInfo }) => {
         setAnchorEl(null);
         dispatch({type:'USER_LOGOUT'});
         Cookies.remove('user');
-        Cookies.remove('cartItems');
+        dispatch({type:'CART_CLEAR'})
         router.push('/');
     }
 

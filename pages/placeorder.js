@@ -4,12 +4,12 @@ import Image from 'next/image'
 import {Store} from '../utils/Store';
 import Layout from '../components/Layout';
 import CheckoutWizard from '../components/CheckoutWizard';
-import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, CircularProgress } from '@mui/material';
+import {Card, List, ListItem, Button, Typography, Link, Grid, TableContainer, Table, 
+    TableHead, TableRow, TableCell, TableBody, CircularProgress } from '@mui/material';
 import styles from  '../styles/App.module.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import Cookies from 'js-cookie';
 import axios from 'axios';
 import {getError} from '../utils/formatError';
 
@@ -65,7 +65,6 @@ const Order = () => {
             });
             
             dispatch({type:'CART_CLEAR'});
-            Cookies.remove('cartItems');
             setLoading(false);
             router.push(`/order/${data._id}`)
 

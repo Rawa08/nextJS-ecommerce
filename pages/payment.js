@@ -17,8 +17,8 @@ const Payment = () => {
     
     useEffect(() => {
         
-        if(!shippingAddress.address){
-            router.push('/shipping')
+        if(!shippingAddress || shippingAddress&& !shippingAddress.address){
+            return router.push('/shipping')
         }else{
             setPaymentMethod(Cookies.get('paymentMethod') || '');
         }
@@ -27,6 +27,7 @@ const Payment = () => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const paymentSubmit = e => {
+
         closeSnackbar();
         e.preventDefault();
         if(!paymentMethod) {
@@ -34,7 +35,7 @@ const Payment = () => {
         } else {
             dispatch({type:"SAVE_PAYMENT_METHOD", payload: paymentMethod});
             Cookies.set('paymentMethod', paymentMethod);
-            router.push('/placeorder');
+            return router.push('/placeorder');
         }
 
     }

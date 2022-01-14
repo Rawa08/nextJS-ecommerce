@@ -3,10 +3,28 @@ import { createContext, useReducer } from "react";
 
 export const Store = createContext();
 
+export const setLocalStorage = (name, value) => {
+    if (typeof window !== 'undefined')
+      localStorage.setItem(name, JSON.stringify(value));
+ };
+ 
+ export const getLocalStorage = (name) => {
+    if (typeof window !== 'undefined') 
+       return JSON.parse(localStorage.getItem(name));
+ };
+
+ export const removeLocalStorage = (name) => {
+    if (typeof window !== 'undefined') 
+       return localStorage.removeItem(name);
+ };
+
 const initialState = {
 
+    
+
     cart:{
-        cartItems: Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems')) : [],
+        cartItems: getLocalStorage('cartItems') ? getLocalStorage('cartItems') : [],
+        
         shippingAddress: Cookies.get('shippingAddress') ? JSON.parse(Cookies.get('shippingAddress')) : {},
         paymentMethod: Cookies.get('paymentMethod') ? Cookies.get('paymentMethod') : '',
     },
@@ -32,12 +50,13 @@ const reducer = (state, action) => {
             })
              : [...state.cart.cartItems, newItem]
 
-            Cookies.set('cartItems', JSON.stringify(cartItems))
+            setLocalStorage('cartItems', cartItems)
             return{...state, cart:{...state.cart, cartItems}}
 
         }
 
         case 'CART_CLEAR':
+            removeLocalStorage('cartItems')
             return {...state, cart:{...state.cart, cartItems:[]}}
 
             
@@ -50,7 +69,7 @@ const reducer = (state, action) => {
                 }
                 return item
             });
-            Cookies.set('cartItems', JSON.stringify(cartItems))
+            setLocalStorage('cartItems', cartItems)
             return{...state, cart:{...state.cart, cartItems}}
 
         }
@@ -58,7 +77,7 @@ const reducer = (state, action) => {
             const {id} = action.payload;
            
             const cartItems = state.cart.cartItems.filter(item => item._id !== id);
-            Cookies.set('cartItems', JSON.stringify(cartItems))
+            setLocalStorage('cartItems', cartItems)
             return{...state, cart:{...state.cart, cartItems}}
 
         }

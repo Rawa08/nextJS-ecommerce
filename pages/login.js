@@ -1,4 +1,4 @@
-import { Link, Button, List, ListItem, TextField, Typography, TableCell } from "@mui/material";
+import { Link, Button, List, ListItem, TextField, Typography} from "@mui/material";
 import Layout from "../components/Layout";
 import styles from '../styles/App.module.css'
 import{ getError }from '../utils/formatError';
@@ -12,12 +12,15 @@ import NextLink from 'next/link';
 import { Store } from "../utils/Store";
 
 const Login = () => {
-    const {handleSubmit, control, formState:{errors}} = useForm();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const {state, dispatch} = useContext(Store);
-    const {user} = state;
 
+    const {handleSubmit, control, formState:{errors}} = useForm();
+
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    const {state: {user}, dispatch} = useContext(Store);
+    
     const router = useRouter();
+
     const {redirect} = router.query;
 
     if(user){
@@ -26,7 +29,9 @@ const Login = () => {
     };
 
     const submitLogin = async ({email, password}) => {
+
         closeSnackbar();
+
         try{
             const {data} = await axios.post(`/api/users/login`, {email, password});
             dispatch({type:'USER_LOGIN', payload: data});
@@ -34,6 +39,7 @@ const Login = () => {
             router.push(redirect || '/');
 
         }catch(error){
+            
             enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:2000 })
          
         }
