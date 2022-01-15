@@ -3,20 +3,19 @@ import {useRouter} from 'next/router';
 import NextLink from 'next/link';
 import React, { useEffect, useContext} from 'react';
 import axios from 'axios';
-import { Store } from '../../../utils/Store';
-import { getError } from '../../../utils/formatError';
-import Layout from '../../../components/Layout';
+import { Store } from '../../utils/Store';
+import { getError } from '../../utils/formatError';
+import Layout from '../../components/Layout';
 import {
   Card,
   List,
   ListItem,
   Button,
   Typography,
-  Grid,
-  ListItemText,
+
   TextField
 } from '@mui/material';
-import styles from '../../../styles/App.module.css';
+import styles from '../../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
@@ -27,8 +26,7 @@ const Profile = () => {
   } = useContext(Store);
   const router = useRouter();
 
-
-
+console.log(router.query.token)
 
 // useEffect(() => {
 //     if (!user) {
@@ -41,9 +39,13 @@ const Profile = () => {
 const {handleSubmit, control, formState:{errors}, setValue} = useForm();
 const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+
+
+
 const submitRegister = async (fields) => {
     closeSnackbar();
     const {fullName, email, password, passwordConfirm} = fields;
+
 
     if(password && password !== passwordConfirm || passwordConfirm && password !== passwordConfirm){
         enqueueSnackbar("Password doesn't match", { variant: 'error', autoHideDuration:1500 })
@@ -118,4 +120,8 @@ const submitRegister = async (fields) => {
   );
 };
 
+
 export default dynamic(() => Promise.resolve(Profile), { ssr: false });
+
+
+// http://localhost:3000/user/passwordReset?token=32ed15a3e0b01c2c2dbeb312871b676b3dfe1f0703efaae1009871e5be5b90ae&id=61e347e4fd015b6237925a38

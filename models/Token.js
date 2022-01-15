@@ -3,7 +3,7 @@ import moongose from 'mongoose';
 const tokenSchema = new moongose.Schema({
 
     userId: {
-        type: Schema.Types.ObjectId,
+        type: moongose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
