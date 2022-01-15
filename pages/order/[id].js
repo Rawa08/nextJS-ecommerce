@@ -87,7 +87,7 @@ const OrderDetail = ({params}) => {
                                   {shippingAddress.country} 
                                   </ListItem>    
                                   <ListItem>
-                                      Status: {order.isDeliverd ? `Deliverd at ${order.deliverdAt}` : 'Not Deliverd'}
+                                      Status: {order.isDelivered ? `Deliverd at ${new Date(order.deliveredAt).toLocaleString()}` : 'Not Deliverd'}
                                      
                                   </ListItem>   
                                   
@@ -105,7 +105,7 @@ const OrderDetail = ({params}) => {
                                   </ListItem>    
                                   
                                   <ListItem>
-                                      Status: {order.isPaid? `Paid at ${order.paidAt}` : 'Not Paid'}
+                                      Status: {order.isPaid? `Paid at ${new Date(order.paidAt).toLocaleString()}` : 'Not Paid'}
                                      
                                   </ListItem>   
                                 </List>
@@ -120,7 +120,7 @@ const OrderDetail = ({params}) => {
                                   <ListItem>
                                   <Grid item md={12} xs={12} mt={4}>
                                       {orderItems.map(item => (
-                                           <Grid container xs={12} md={12} spacing={2} key={item._id}  justifyContent="center"
+                                           <Grid container  spacing={2} key={item._id}  justifyContent="center"
                                            alignItems="center" mt={2}>
                                           <Grid item xs={2} md={3}>
                                                   <NextLink href={`/product/${item._id}`} passHref>

@@ -126,7 +126,7 @@ const Order = () => {
                                   <ListItem>
                                   <Grid item md={12} xs={12} mt={4}>
                                       {cartItems.map(item => (
-                                           <Grid container xs={12} md={12} spacing={2} key={item._id}  justifyContent="center"
+                                           <Grid container  spacing={2} key={item._id}  justifyContent="center"
                                            alignItems="center" mt={2}>
                                           <Grid item xs={2} md={3}>
                                                   <NextLink href={`/product/${item._id}`} passHref>
