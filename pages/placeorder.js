@@ -65,6 +65,7 @@ const Order = () => {
             
             
             setLoading(false);
+            dispatch({type:'CART_CLEAR'});
             router.push(`/order/${data._id}`)
 
         } catch (error) {

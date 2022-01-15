@@ -12,14 +12,8 @@ import {
   ListItem,
   Button,
   Typography,
-  Link,
   Grid,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
+ Divider,
   CircularProgress,
   ListItemText,
 } from '@mui/material';
@@ -50,6 +44,7 @@ const [orders, setOrders] = useState([])
         });
 
         setOrders(data);
+        
         setLoading(false);
 
       } catch (err) {
@@ -59,12 +54,14 @@ const [orders, setOrders] = useState([])
     };
 
     fetchOrder();
+    
   }, []);
 
+  
   return (
     <Layout title="Order History">
       <Grid container spacing={1}>
-        <Grid item md={3} xs={12}>
+        <Grid item md={2} xs={12}>
           <Card className={styles.section}>
               <List>
                   <NextLink href={'/user/profile'} passHref>
@@ -81,11 +78,11 @@ const [orders, setOrders] = useState([])
           </Card>
         </Grid>
 
-        <Grid item md={9} xs={12}>
+        <Grid item md={10} xs={12}>
           <Card className={styles.section}>
             <List>
               <ListItem>
-                <Typography component="h3" variant="h3">
+                <Typography component="h5" variant="h5">
                   Order History
                 </Typography>
               </ListItem>
@@ -95,33 +92,33 @@ const [orders, setOrders] = useState([])
                 ) : error ? (
                   <Typography className={styles.error}>{error}</Typography>
                 ) : (
-                  <TableContainer>
-                      <Table>
-                          <TableHead>
-                              <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>DATE</TableCell>
-                                <TableCell>TOTAL</TableCell>
-                                <TableCell>PAID</TableCell>
-                                <TableCell>DELIVERD</TableCell>
-                                <TableCell>ACTION</TableCell>
-                              </TableRow>
-                          </TableHead>
-
-                          <TableBody>
+                  
+                     <Grid container spacing={1}  key={8}  justifyContent="center" alignItems="center" mt={2}>
+                                     
+                          <Grid container spacing={1}  justifyContent="center" alignItems="center" mt={2} mb={2}>
+                            <Grid item 	sx={{ display: { xs: 'none' , md: 'block'} }}  md={2}>ID</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2}>TOTAL</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} align='center'>DATE</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} align='center'>PAID</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} align='center'>DELIVERD</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} align='center' >ACTION</Grid>
+                            </Grid>
+                            <Divider sx={{width: '100%', bgcolor: 'background.paper', display: { xs: 'none' , md: 'block'}}} />
                                {orders.map(order => (
-                                   <TableRow key={order._id}>
-                                       <TableCell>{order._id.substring(20, 24)}</TableCell>
-                                        <TableCell>{order.createdAt}</TableCell>    
-                                        <TableCell>{order.totalPrice}</TableCell>
-                                        <TableCell>{order.isPaid? `Paid at ${order.paidAt}`: 'Not Paid'}</TableCell>    
-                                        <TableCell>{order.isDelivered? `Deliverd at ${order.deliveredAt}`: 'Not delivered'}</TableCell>    
-                                        <TableCell><NextLink href={`/order/${order._id}?redirect=/order-history`} passHref><Button variant='contained' color='secondary'>Details</Button></NextLink></TableCell>    
-                                   </TableRow>
+                                   <Grid container spacing={1}  key={order._id}  justifyContent="center" alignItems="center" mt={3}>
+                                    
+                                       <Grid item xs={12} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>ID: &nbsp;</Typography>{order._id.substring(18, 24)}</Grid>
+                                        <Grid item xs={12} md={2} ><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2' align='right'>Price: &nbsp;</Typography> $ {order.totalPrice}</Grid>
+                                        
+                                        <Grid item xs={12} md={2} sx={{display: 'flex', flexDirection: { xs: 'row', md: 'column' } ,alignItems: { xs: 'flex-start', md: 'flex-end' }}}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Order Date: &nbsp;</Typography>{new Date(order.createdAt).toLocaleDateString()}</Grid>    
+                                        <Grid item xs={12} md={2} sx={{display: 'flex', flexDirection: { xs: 'row', md: 'column' } ,alignItems: { xs: 'flex-start', md: 'flex-end' }}}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Paid: &nbsp;</Typography>{order.isPaid? new Date(order.paidAt).toLocaleDateString() : 'Not Paid'}</Grid>    
+                                        <Grid item xs={12} md={2} sx={{display: 'flex', flexDirection: { xs: 'row', md: 'column' } ,alignItems: { xs: 'flex-start', md: 'flex-end' }}} ><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Delivered: &nbsp;</Typography>{order.isDelivered?  new Date(order.deliveredAt).toLocaleDateString(): 'Not delivered'}</Grid>    
+                                        <Grid item xs={12} md={2} mb={2} align='right' ><NextLink href={`/order/${order._id}?redirect=/order-history`} passHref><Button variant='contained' color='secondary'>Details</Button></NextLink></Grid>   
+                                        <Divider sx={{width: '70%', bgcolor: 'background.paper', display: { xs: 'block' , md: 'none'}}} />
+                                   </Grid>
                                ))}
-                          </TableBody>
-                      </Table>
-                  </TableContainer>
+                          </Grid>
+             
                 )}
               </ListItem>
             </List>
