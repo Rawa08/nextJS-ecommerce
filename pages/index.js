@@ -19,7 +19,7 @@ export default function Home({products}) {
   return (
      <Layout title="My E-commerce">
        <Grid container spacing={1} className={styles.homeContainer}>
-        {products.map(product => {
+        { products ? products.map(product => {
  
           return (
             <Grid item md={4} xs={12} key={product._id}> 
@@ -44,7 +44,9 @@ export default function Home({products}) {
             </Card>
             </Grid>
           )
-        })}
+        }):
+          <Typography component='h4' variant='h4'>No products avalible</Typography>
+        }
        </Grid>
      </Layout>
   )
@@ -52,10 +54,20 @@ export default function Home({products}) {
 
 
 export const getServerSideProps = async context => {
-  await db.connectDb();
-  const products = await Product.find({}).lean();
-  await db.disconnectDb();
-  return{
-    props: {products: products.map(p => (db.convertDocToObject(p)))}
+  try{
+    await db.connectDb();
+    const products = await Product.find({}).lean();
+    await db.disconnectDb();
+    return{
+      props: {products: products.map(p => (db.convertDocToObject(p)))}
+    }
   }
+  catch(e){
+    if(e){
+      return{
+        props: {products: null}
+      }
+    }
+  }
+ 
 } 
