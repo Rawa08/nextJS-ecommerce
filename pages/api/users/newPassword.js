@@ -18,7 +18,6 @@ handler.post(async (req, res)=> {
 
     const resetToken = await Token.findOne({userId:id});
     
-    
     if (!resetToken) {
         await db.disconnectDb();
         return res.status(403).send({message:"Invalid or expired password reset token"});
@@ -32,7 +31,7 @@ handler.post(async (req, res)=> {
     };
     
     const newPassword = bcrypt.hashSync(password, 10);
-    
+
     const user = await User.findById(id);
 
     user.password = newPassword;

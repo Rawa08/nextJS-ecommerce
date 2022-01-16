@@ -1,39 +1,38 @@
 import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
-import NextLink from 'next/link';
-import React, { useEffect, useContext} from 'react';
+import React, { useEffect, useContext, useState} from 'react';
 import axios from 'axios';
 import { Store } from '../../utils/Store';
 import { getError } from '../../utils/formatError';
 import Layout from '../../components/Layout';
-import {
-  Card,
-  List,
-  ListItem,
-  Button,
-  Typography,
-
-  TextField
-} from '@mui/material';
+import {Card, List, ListItem, Button, Typography, TextField } from '@mui/material';
 import styles from '../../styles/App.module.css';
 import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 
-const Profile = () => {
-  const {
-    state: { user }, dispatch
-  } = useContext(Store);
-  const router = useRouter();
+const Reset = () => {
 
-console.log(router.query.token)
-
-// useEffect(() => {
-//     if (!user) {
-//       return router.push('/login');
-//     }
+  const { state: { user }, dispatch } = useContext(Store);
   
-//   }, []);
+  const router = useRouter();
+  
+  const {token, id} = router.query
+  const [validLink, setValidLink] = useState(false);
+
+useEffect(() => {
+
+    if (user) {
+      return router.push('/user/profile');
+    }
+
+    if(token && id){
+     
+      setValidLink(true)
+    }
+    
+ 
+  }, [token, id]);
 
 
 const {handleSubmit, control, formState:{errors}, setValue} = useForm();
@@ -42,31 +41,27 @@ const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 
 
-const submitRegister = async (fields) => {
+const submitReset = async (fields) => {
     closeSnackbar();
-    const {fullName, email, password, passwordConfirm} = fields;
+    const {password, passwordConfirm} = fields;
 
 
     if(password && password !== passwordConfirm || passwordConfirm && password !== passwordConfirm){
         enqueueSnackbar("Password doesn't match", { variant: 'error', autoHideDuration:1500 })
         return;
     }
-    else {
 
-    try{
-        const {data} = await axios.put(`/api/users/profile`, {fullName,email, password}, {
-            headers:{authorization: `Bearer ${user.token}`}
-        });
+      try{
+       
+        const {data} = await axios.post(`/api/users/newPassword`, {password, token, id});
+
         dispatch({type:'USER_LOGIN', payload: data});
-        Cookies.set('user', JSON.stringify(data));
-        enqueueSnackbar('Your Profile updated successfully',{ variant: 'success', autoHideDuration:1800 } )
+        router.push('/user/profile');
       
-
-    }catch(error){
+        }catch(error){
         enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })
-    }
-}
-}
+        }
+        }
 
 
 
@@ -84,7 +79,7 @@ const submitRegister = async (fields) => {
               </ListItem>
               
               
-                <form className={styles.form} onSubmit={handleSubmit(submitRegister)}>
+          {validLink &&  <form className={styles.form} onSubmit={handleSubmit(submitReset)}>
           
                 <List>
                     
@@ -111,7 +106,7 @@ const submitRegister = async (fields) => {
                  
                   
                 </List>
-            </form>
+            </form>}
               
             </List>
           </Card>
@@ -121,7 +116,4 @@ const submitRegister = async (fields) => {
 };
 
 
-export default dynamic(() => Promise.resolve(Profile), { ssr: false });
-
-
-// http://localhost:3000/user/passwordReset?token=32ed15a3e0b01c2c2dbeb312871b676b3dfe1f0703efaae1009871e5be5b90ae&id=61e347e4fd015b6237925a38
+export default dynamic(() => Promise.resolve(Reset), { ssr: false });

@@ -13,12 +13,13 @@ const tokenSchema = new moongose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        expires: 3600
+        default: Date.now
     }
 }, {
     timestamps: true
 });
+
+tokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 1800 });
 
 const Token = moongose.models.Token || moongose.model('Token', tokenSchema);
 
