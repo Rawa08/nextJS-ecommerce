@@ -54,9 +54,7 @@ const submitReset = async (fields) => {
       try{
        
         const {data} = await axios.post(`/api/users/newPassword`, {password, token, id});
-
-        dispatch({type:'USER_LOGIN', payload: data});
-        router.push('/user/profile');
+        router.push('/login?redirect=passwordChanged');
       
         }catch(error){
         enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })

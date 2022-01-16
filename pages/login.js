@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import axios from 'axios';
 import {useForm, Controller} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { useContext} from 'react';
+import { useContext, useEffect} from 'react';
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Store } from "../utils/Store";
@@ -23,10 +23,18 @@ const Login = () => {
 
     const {redirect} = router.query;
 
-    if(user){
+    useEffect(() => {
+        closeSnackbar();
+        if(user){
+            return router.push(redirect || '/');
+        };
+
+        if(redirect && redirect === 'passwordChanged'){
+            enqueueSnackbar('Your password have been updated successfully', { variant: 'success', autoHideDuration:3000 })
+        }
         
-        router.push(redirect || '/');
-    };
+    }, [])
+   
 
     const submitLogin = async ({email, password}) => {
 
@@ -36,7 +44,7 @@ const Login = () => {
             const {data} = await axios.post(`/api/users/login`, {email, password});
             dispatch({type:'USER_LOGIN', payload: data});
             Cookies.set('user', JSON.stringify(data));
-            router.push(redirect || '/');
+            router.push((redirect && redirect !== 'passwordChanged') && redirect || '/');
 
         }catch(error){
             
