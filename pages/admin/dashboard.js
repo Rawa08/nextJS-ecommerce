@@ -4,7 +4,6 @@ import NextLink from 'next/link';
 import React, { useEffect, useContext, useState } from 'react';
 import axios from 'axios';
 import { Store } from '../../utils/Store';
-import { getError } from '../../utils/formatError';
 import Layout from '../../components/Layout';
 import {
   Card,
@@ -18,7 +17,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import styles from '../../styles/App.module.css';
-import { textAlign } from '@mui/system';
+
 
 
 const Admin = () => {
@@ -69,7 +68,7 @@ const Admin = () => {
         <Grid item md={2} xs={12}>
           <Card className={styles.section}>
               <List>
-                  <NextLink href={'/admin/orders'} passHref>
+                  <NextLink href={'/admin/dashboard'} passHref>
                       <ListItem button selected component='a'>
                           <ListItemText primary='Orders'></ListItemText>
                       </ListItem>
