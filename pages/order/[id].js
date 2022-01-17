@@ -197,7 +197,13 @@ const OrderDetail = ({params}) => {
                                           </Grid>
                                       </Grid>
                                   </ListItem>
+                                  <ListItem>
+
                                       {!order.isPaid && order.paymentMethod === 'PayPal' && <PayPal user={user} order={order} />}  
+                                  </ListItem>
+                                  {user.isAdmin && <ListItem>
+                                    <NextLink href={`/admin/dashboard`} passHref><Button variant='contained' color='secondary' fullWidth>Back to Dashboard</Button></NextLink>
+                                      </ListItem>}
                                       
                            
                               </List>
