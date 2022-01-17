@@ -18,6 +18,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import styles from '../../styles/App.module.css';
+import { textAlign } from '@mui/system';
 
 
 const Admin = () => {
@@ -100,15 +101,24 @@ const Admin = () => {
                   
                   {orders.length > 0 ? 
            <Grid container spacing={1}>
+                 <Grid container spacing={1}  justifyContent="center" alignItems="center" mt={2} mb={2}>
+                            <Grid item 	sx={{ display: { xs: 'none' , md: 'block'} }}  md={2}>Order Date</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2}>Payment</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} >Delivered</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} >Total</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} >Country</Grid>
+                            <Grid item sx={{ display: { xs: 'none' , md: 'block'} }} md={2} align='center'>ACTION</Grid>
+                            </Grid>
+                            <Divider sx={{width: '100%', bgcolor: 'background.paper', display: { xs: 'none' , md: 'block'}}} />
               { orders.map(order => (
                    <Grid container spacing={1} key={order._id} mt={1}>
-                       <Grid item md={2}>{new Date(order.createdAt).toLocaleDateString()}</Grid>
-                       <Grid item md={2}>{order.isPaid ? new Date(order.paidAt).toLocaleDateString() : 'Not Paid'}</Grid>
-                       <Grid item md={2}>{order.isDelivered ? new Date(order.deliveredAt).toLocaleDateString() : 'Not Delivered'}</Grid>
-                       <Grid item md={2}>$ {order.totalPrice}</Grid>
-                       <Grid item md={2}>{order.shippingAddress.country}</Grid>
-                       <Grid item md={2}><NextLink href={`/order/${order._id}`} passHref><Button variant='contained' color='secondary'>Details</Button></NextLink></Grid>
-
+                       <Grid item xs={12} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Order Date: &nbsp;</Typography>{new Date(order.createdAt).toLocaleDateString()}</Grid>
+                       <Grid item xs={6} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Payment: &nbsp;</Typography>{order.isPaid ? new Date(order.paidAt).toLocaleDateString() : 'Not Paid'}</Grid>
+                       <Grid item xs={6} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Delivered: &nbsp;</Typography>{order.isDelivered ? new Date(order.deliveredAt).toLocaleDateString() : 'Not Delivered'}</Grid>
+                       <Grid item xs={6} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Total: &nbsp;</Typography>$ {order.totalPrice}</Grid>
+                       <Grid item xs={6} md={2}><Typography sx={{ display: { xs: 'inline' , md: 'none'} }} variant='subtitle2'>Country: &nbsp;</Typography>{order.shippingAddress.country}</Grid>
+                       <Grid item xs={12} md={2} mb={3}>
+                       <Divider textAlign="center"><NextLink href={`/order/${order._id}`} passHref><Button variant='contained' color='secondary' >Details</Button></NextLink></Divider></Grid>
                    </Grid>
                 
                    ))}
