@@ -29,12 +29,12 @@ const Admin = () => {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState([])
   
-  console.log(orders)
+ 
   useEffect(() => {
     if (!user.isAdmin) {
       return router.push('/');
     }
-
+    
     const fetchOrders = async () => {
         try{
             setLoading(true);
@@ -45,7 +45,9 @@ const Admin = () => {
                     
                   }
                 });
+                console.log(data[0])
                 setOrders(data)
+                
                 setLoading(false)
                
                 
@@ -55,6 +57,7 @@ const Admin = () => {
         }
     }
     fetchOrders()
+    
 
   }, []);
 
@@ -94,15 +97,24 @@ const Admin = () => {
               </ListItem>
               {loading ? <CircularProgress /> :
               <ListItem>
+                  
                   {orders.length > 0 ? 
-               
+           <Grid container spacing={1}>
+              { orders.map(order => (
+                   <Grid container spacing={1} key={order._id} mt={1}>
+                       <Grid item md={2}>{new Date(order.createdAt).toLocaleDateString()}</Grid>
+                       <Grid item md={2}>{order.isPaid ? new Date(order.paidAt).toLocaleDateString() : 'Not Paid'}</Grid>
+                       <Grid item md={2}>{order.isDelivered ? new Date(order.deliveredAt).toLocaleDateString() : 'Not Delivered'}</Grid>
+                       <Grid item md={2}>$ {order.totalPrice}</Grid>
+                       <Grid item md={2}>{order.shippingAddress.country}</Grid>
+                       <Grid item md={2}><NextLink href={`/order/${order._id}`} passHref><Button variant='contained' color='secondary'>Details</Button></NextLink></Grid>
+
+                   </Grid>
+                
+                   ))}
                     
-                    
-                     <Grid container spacing={1}  key={8}  justifyContent="center" alignItems="center" mt={2}>
-                                   
-                      
-                    
-                          </Grid>
+                   </Grid>   
+                     
              
             : <Typography component='h5' variant='h5'>No orders have been submited</Typography>}
               </ListItem>

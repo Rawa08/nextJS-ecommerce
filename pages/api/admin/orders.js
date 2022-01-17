@@ -20,7 +20,6 @@ handler.post(async (req, res) => {
     await db.connectDb();
     const orders = await Order.find({});
     await db.disconnectDb();
-    
     res.status(200).send(orders);
 
 })
