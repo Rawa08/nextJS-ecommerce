@@ -12,10 +12,13 @@ import {
   Typography,
   Grid,
   ListItemText,
+  TextField,
+  Switch
 } from '@mui/material';
 import styles from '../../styles/App.module.css';
 import Product from '../../models/Product';
 import db from '../../utils/db';
+import {useForm, Controller} from 'react-hook-form';
 
 
 
@@ -25,10 +28,13 @@ const AdminProducts = ({products}) => {
   } = useContext(Store);
   const router = useRouter();
 
+  const {handleSubmit, control, formState:{errors}, setValue} = useForm();
+
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
   const [showOOS, setShowOOS] = useState(false);
+  const [showEdit, setShowEdit] = useState(true);
   
 
  
@@ -62,6 +68,8 @@ const AdminProducts = ({products}) => {
     
 
   }, []);
+
+const submitUpdate = (fields) => console.log(fields)
 
   
   return (
@@ -119,7 +127,94 @@ const AdminProducts = ({products}) => {
                   Products
                 </Typography>
               </ListItem>
-              
+                  {showEdit && 
+
+                 
+                                <form className={styles.form} onSubmit={handleSubmit(submitUpdate)}>
+           
+                <List>
+                    <ListItem>
+                        <Controller name="Title"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="title" label='Product Name' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="Brand"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="brand" label='Brand' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="Category"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="category" label='Category' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="Description"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="description" label='Product Description' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="Image"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                    <Controller name="created"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField sx={{width: '45%', margin: 'auto' }} variant='outlined' id="created"  inputProps={{type:'date'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                        <Controller name="Price"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField sx={{width: '23%', margin: 'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                        <Controller name="popularity"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField  sx={{width: '20%', margin: 'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                        <Controller name="oos"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <Switch  sx={{width: '10%', margin: 'auto' }} variant='outlined'  id="oos" label='outOfStock' inputProps={{type:'checkbox'}}  {...field}
+                            ></Switch>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Button variant='contained' color='secondary' type='submit' fullWidth>Continue to Payment</Button>
+                    </ListItem>
+                 
+                </List>
+            </form>
+                  }
                 {products && products.map(product => (
                   <ListItem key={product._id}>
                   <Typography >{product.title}</Typography>
