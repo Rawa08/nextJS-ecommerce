@@ -21,7 +21,7 @@ handler.put(async (req, res) => {
 
     await db.connectDb();
     const product = await Product.findById(req.body.id);
-    console.log(product.outOfStock)
+    
     product.title = title ? title : product.title;
     product.brand = brand ? brand : product.brand;
     product.category = category ? category : product.category;
