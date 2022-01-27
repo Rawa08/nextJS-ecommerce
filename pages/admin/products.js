@@ -34,7 +34,7 @@ const AdminProducts = ({products}) => {
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
   const [showOOS, setShowOOS] = useState(false);
-  const [showEdit, setShowEdit] = useState(true);
+  const [showEdit, setShowEdit] = useState(false);
   
 
  
@@ -42,35 +42,25 @@ const AdminProducts = ({products}) => {
     if (!user.isAdmin) {
       return router.push('/');
     }
-    
-    // const fetchProducts = async () => {
-    //     try{
-    //         setLoading(true);
-
-    //         const {data} = await axios.post('/api/admin/orders',{},{
-    //             headers:{
-    //                 authorization: `Bearer ${user.token}`,
-                    
-    //               }
-    //             });
-    //             console.log(data[0])
-    //             setOrders(data)
-                
-    //             setLoading(false)
-               
-                
-    //     }
-    //     catch(err) {
-    //         console.log(err)
-    //     }
-    // }
-    // fetchProducts()
-    
-
   }, []);
 
 const submitUpdate = (fields) => console.log(fields)
 
+const editProduct = (id) => {
+  const product = products.filter(p => (p._id === id));
+  
+  const {title, brand, category, description, image, price, popularity, outOfStock} = product[0];
+  setValue('Title', title)
+  setValue('Brand', brand)
+  setValue('Category', category)
+  setValue('Description', description)
+  setValue('Image', image)
+  setValue('Price', price)
+  setValue('Popularity', popularity)
+  setValue('oos', outOfStock)
+
+  setShowEdit(true);
+} 
   
   return (
     <Layout title="Admin Products">
@@ -169,47 +159,41 @@ const submitUpdate = (fields) => console.log(fields)
                             ></TextField>
                         )}></Controller>
                     </ListItem>
-                    <ListItem>
+                    <ListItem alignItems='center'>
                         <Controller name="Image"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
+                            <TextField  sx={{width: '50%', marginRight:'auto' }} variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
-                    <Controller name="created"
+                   
+                   <Controller name="oos"
                         control={control}
-                        defaultValue=""
+                        defaultValue={false}
                         render={({field})=>(
-                            <TextField sx={{width: '45%', margin: 'auto' }} variant='outlined' id="created"  inputProps={{type:'date'}}  {...field}
-                            ></TextField>
+                           <Typography sx={{width: '15%', margin:'auto' }}>Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
+                           /></Typography> 
                         )}></Controller>
                         <Controller name="Price"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField sx={{width: '23%', margin: 'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
+                            <TextField sx={{width: '14%', margin:'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                        <Controller name="popularity"
+                        <Controller name="Popularity"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField  sx={{width: '20%', margin: 'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
+                            <TextField  sx={{width: '14%', marginLeft:'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                        <Controller name="oos"
-                        control={control}
-                        defaultValue=""
-                        render={({field})=>(
-                            <Switch  sx={{width: '10%', margin: 'auto' }} variant='outlined'  id="oos" label='outOfStock' inputProps={{type:'checkbox'}}  {...field}
-                            ></Switch>
-                        )}></Controller>
+                        
                     </ListItem>
                     <ListItem>
-                        <Button variant='contained' color='secondary' type='submit' fullWidth>Continue to Payment</Button>
+                        <Button variant='contained' color='secondary' type='submit' sx={{width: '90%', margin: 'auto' }}>Continue to Payment</Button>
+                        <Button variant='contained' color='error' type='submit' sx={{width: '8%', margin: 'auto' }} onClick={() => setShowEdit(false)}>X</Button>
                     </ListItem>
                  
                 </List>
@@ -217,7 +201,8 @@ const submitUpdate = (fields) => console.log(fields)
                   }
                 {products && products.map(product => (
                   <ListItem key={product._id}>
-                  <Typography >{product.title}</Typography>
+                  <Typography>{product.title}</Typography>
+                  <Button onClick={() => editProduct(product._id)}>Edit</Button>
                   </ListItem>
                 ))}
               
