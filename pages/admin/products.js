@@ -19,10 +19,11 @@ import styles from '../../styles/App.module.css';
 import Product from '../../models/Product';
 import db from '../../utils/db';
 import {useForm, Controller} from 'react-hook-form';
+import axios from 'axios';
 
 
 
-const AdminProducts = ({products}) => {
+const AdminProducts = ({productsFromDb}) => {
   const {
     state: { user },
   } = useContext(Store);
@@ -35,30 +36,97 @@ const AdminProducts = ({products}) => {
   const [showBrands, setShowBrands] = useState(false);
   const [showOOS, setShowOOS] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  
+  const [addProduct, setAddProduct] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [products, setProducts] = useState(null);
 
  
   useEffect(() => {
     if (!user.isAdmin) {
       return router.push('/');
     }
+    setProducts(productsFromDb)
   }, []);
 
-const submitUpdate = (fields) => console.log(fields)
+const submitUpdate = async (fields) => {
+  const {title, brand, category, description, image, price, popularity, oos} = fields;
+
+  try{
+    
+    const {data} = await axios.put("/api/admin/updateProducts",{
+      id:productId,
+      title, brand, category, description,
+      image, price, popularity, oos} ,{
+      headers:{
+        authorization: `Bearer ${user.token}`
+      }
+    });
+    setShowEdit(false);
+
+    const updateStateProducts = products.map(prod => {
+      if(prod._id === productId){
+        prod = data;
+      }
+
+      return prod;
+    });
+
+    setProducts(updateStateProducts);
+  }catch(error){
+    console.log(error)
+  }
+};
+
+const addNewProduct = async (fields) => {
+  const {title, brand, category, description, image, price, popularity, oos} = fields;
+
+  try{
+    
+    const {data} = await axios.post("/api/admin/addnewproduct",{
+      title, brand, category, description,
+      image, price, popularity, oos} ,{
+      headers:{
+        authorization: `Bearer ${user.token}`
+      }
+    });
+    setAddProduct(false);    
+    setProducts((products) => [...products, data]);
+  }catch(error){
+    console.log(error)
+  }
+}
+const deleteProduct = async () => {
+  try{
+    
+    const {data} = await axios.delete("/api/admin/deleteProduct" ,{
+      headers:{
+        authorization: `Bearer ${user.token}`
+      },data:{id:productId}
+    });
+    setShowEdit(false);
+
+    const updateStateProducts = products.filter(prod => prod._id !== productId);
+
+    setProducts(updateStateProducts);
+  }catch(error){
+    console.log(error)
+  }
+}
 
 const editProduct = (id) => {
-  const product = products.filter(p => (p._id === id));
-  
-  const {title, brand, category, description, image, price, popularity, outOfStock} = product[0];
-  setValue('Title', title)
-  setValue('Brand', brand)
-  setValue('Category', category)
-  setValue('Description', description)
-  setValue('Image', image)
-  setValue('Price', price)
-  setValue('Popularity', popularity)
+  const product = products.filter(p => (p._id === id))[0];
+  setProductId(product._id)
+  const {title, brand, category, description, image, price, popularity, outOfStock} = product;
+  setValue('title', title)
+  setValue('brand', brand)
+  setValue('category', category)
+  setValue('description', description)
+  setValue('image', image)
+  setValue('price', price)
+  setValue('popularity', popularity)
   setValue('oos', outOfStock)
 
+  setAddProduct(false)
   setShowEdit(true);
 } 
   
@@ -94,7 +162,7 @@ const editProduct = (id) => {
         
               <ListItem>
                           <Grid container spacing={2}>
-                            <Grid item><Button onClick={()=>setShowAddProduct(!showAddProduct)}>Add product</Button></Grid>
+                            {!addProduct && <Grid item><Button onClick={()=>setAddProduct(true)}>Add product</Button></Grid>}
                             <Grid item onClick={()=>setShowCategory(!showCategory)}><Button>Show by Category</Button></Grid>
                             <Grid item onClick={()=>setShowBrands(!showBrands)}><Button>Show by Brand</Button></Grid>
                             <Grid item onClick={()=>setShowOOS(!showOOS)}><Button>Show stock status</Button></Grid>
@@ -103,7 +171,7 @@ const editProduct = (id) => {
          
               </ListItem>
               
-                {showAddProduct && <Typography><ListItem>Add product form</ListItem></Typography>}
+                
                 {showCategory && <Typography><ListItem>All Categories here</ListItem></Typography>}
                 {showBrands && <Typography><ListItem>All Brands here</ListItem></Typography>}
                 {showOOS && <Typography><ListItem>
@@ -111,20 +179,21 @@ const editProduct = (id) => {
                   <Button>In Stock</Button>
                
                   </ListItem></Typography>}
+            
               
                   <ListItem>
                 <Typography component="h5" variant="h5">
                   Products
                 </Typography>
-              </ListItem>
-                  {showEdit && 
-
-                 
-                                <form className={styles.form} onSubmit={handleSubmit(submitUpdate)}>
+                </ListItem>
+                {addProduct &&
+                
+                <form className={styles.form} onSubmit={handleSubmit(addNewProduct)}>
            
                 <List>
                     <ListItem>
-                        <Controller name="Title"
+
+                        <Controller name="title"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -133,7 +202,7 @@ const editProduct = (id) => {
                         )}></Controller>
                     </ListItem>
                     <ListItem>
-                        <Controller name="Brand"
+                        <Controller name="brand"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -142,7 +211,7 @@ const editProduct = (id) => {
                         )}></Controller>
                     </ListItem>
                     <ListItem>
-                        <Controller name="Category"
+                        <Controller name="category"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -151,7 +220,7 @@ const editProduct = (id) => {
                         )}></Controller>
                     </ListItem>
                     <ListItem>
-                        <Controller name="Description"
+                        <Controller name="description"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -160,7 +229,7 @@ const editProduct = (id) => {
                         )}></Controller>
                     </ListItem>
                     <ListItem alignItems='center'>
-                        <Controller name="Image"
+                        <Controller name="image"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -175,14 +244,14 @@ const editProduct = (id) => {
                            <Typography sx={{width: '15%', margin:'auto' }}>Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
                            /></Typography> 
                         )}></Controller>
-                        <Controller name="Price"
+                        <Controller name="price"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
                             <TextField sx={{width: '14%', margin:'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                        <Controller name="Popularity"
+                        <Controller name="popularity"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
@@ -192,16 +261,101 @@ const editProduct = (id) => {
                         
                     </ListItem>
                     <ListItem>
-                        <Button variant='contained' color='secondary' type='submit' sx={{width: '90%', margin: 'auto' }}>Continue to Payment</Button>
-                        <Button variant='contained' color='error' type='submit' sx={{width: '8%', margin: 'auto' }} onClick={() => setShowEdit(false)}>X</Button>
+                        <Button variant='contained' color='secondary' type='submit' sx={{width: '68%', margin: 'auto' }}>Add</Button>
+                        <Button variant='contained' color='error' type='submit' sx={{width: '30%', margin: 'auto' }} onClick={() => setAddProduct(false)}>X</Button>
+                    </ListItem>
+                 
+                </List>
+            </form>
+                
+                }
+                  {showEdit && 
+
+                 
+                                <form className={styles.form} onSubmit={handleSubmit(submitUpdate)}>
+           
+                <List>
+                    <ListItem>
+
+                        <Controller name="title"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="title" label='Product Name' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="brand"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="brand" label='Brand' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="category"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="category" label='Category' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem>
+                        <Controller name="description"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField variant='outlined' fullWidth id="description" label='Product Description' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                    </ListItem>
+                    <ListItem alignItems='center'>
+                        <Controller name="image"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField  sx={{width: '50%', marginRight:'auto' }} variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                   
+                   <Controller name="oos"
+                        control={control}
+                        defaultValue={false}
+                        render={({field})=>(
+                           <Typography sx={{width: '15%', margin:'auto' }}>Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
+                           /></Typography> 
+                        )}></Controller>
+                        <Controller name="price"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField sx={{width: '14%', margin:'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                        <Controller name="popularity"
+                        control={control}
+                        defaultValue=""
+                        render={({field})=>(
+                            <TextField  sx={{width: '14%', marginLeft:'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
+                            ></TextField>
+                        )}></Controller>
+                        
+                    </ListItem>
+                    <ListItem>
+                        <Button variant='contained' color='secondary' type='submit' sx={{width: '50%', margin: 'auto' }}>UPDATE</Button>
+                        <Button variant='contained' color='error' type='submit' sx={{width: '30%', margin: 'auto' }} onClick={() => deleteProduct()}>REMOVE PRODUCT</Button>
+                        <Button variant='contained' color='error' type='submit' sx={{width: '18%', margin: 'auto' }} onClick={() => setShowEdit(false)}>CLOSE</Button>
                     </ListItem>
                  
                 </List>
             </form>
                   }
-                {products && products.map(product => (
+                {products && products.map((product, i) => (
                   <ListItem key={product._id}>
-                  <Typography>{product.title}</Typography>
+                  <Typography>{i+1}. {product.title}</Typography>
                   <Button onClick={() => editProduct(product._id)}>Edit</Button>
                   </ListItem>
                 ))}
@@ -221,7 +375,7 @@ export const getServerSideProps = async context => {
     const products = await Product.find({}).lean();
     await db.disconnectDb();
     return{
-      props: {products: products.map(p => (db.convertDocToObject(p)))}
+      props: {productsFromDb: products.map(p => (db.convertDocToObject(p)))}
     }
   }
   catch(e){
