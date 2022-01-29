@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
 import NextLink from 'next/link';
+import Image from 'next/image';
 import React, { useEffect, useContext, useState } from 'react';
 import { Store } from '../../utils/Store';
 import Layout from '../../components/Layout';
@@ -34,20 +35,47 @@ const AdminProducts = ({productsFromDb}) => {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
-  const [showOOS, setShowOOS] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [addProduct, setAddProduct] = useState(false);
   const [productId, setProductId] = useState("");
   const [products, setProducts] = useState(null);
+  const [brands, setBrands] = useState(null);
+  const [category, setCategory] = useState(null);
 
  
   useEffect(() => {
     if (!user.isAdmin) {
       return router.push('/');
     }
-    setProducts(productsFromDb)
+    setProducts(productsFromDb);
+    
+    const brandsArray = []
+    productsFromDb.map(prod => {
+      if(!brandsArray.includes(prod.brand.toLowerCase())){
+        brandsArray.push(prod.brand.toLowerCase())
+        return;
+      }
+      return;
+    })
+
+    setBrands(brandsArray)
+    
+    
+    const categoryArray = []
+    productsFromDb.map(prod => {
+      if(!categoryArray.includes(prod.category.toLowerCase())){
+        categoryArray.push(prod.category.toLowerCase())
+        return;
+      }
+      return;
+    })
+
+    setCategory(categoryArray)
+
   }, []);
 
+  
+  
 const submitUpdate = async (fields) => {
   const {title, brand, category, description, image, price, popularity, oos} = fields;
 
@@ -129,6 +157,20 @@ const editProduct = (id) => {
   setAddProduct(false)
   setShowEdit(true);
 } 
+
+const filterBrand = brand => {
+  const filteredProd = productsFromDb.filter(prod => prod.brand.toLowerCase() === brand.toLowerCase());
+  setProducts(filteredProd)
+}
+
+const filterCategory = category => {
+  const filteredCat = productsFromDb.filter(prod => prod.category.toLowerCase() === category.toLowerCase());
+  setProducts(filteredCat)
+}
+
+const showOOS = () => {
+  setProducts(prevArray => prevArray.filter(prod => prod.outOfStock))
+}
   
   return (
     <Layout title="Admin Products">
@@ -165,21 +207,25 @@ const editProduct = (id) => {
                             {!addProduct && <Grid item><Button onClick={()=>setAddProduct(true)}>Add product</Button></Grid>}
                             <Grid item onClick={()=>setShowCategory(!showCategory)}><Button>Show by Category</Button></Grid>
                             <Grid item onClick={()=>setShowBrands(!showBrands)}><Button>Show by Brand</Button></Grid>
-                            <Grid item onClick={()=>setShowOOS(!showOOS)}><Button>Show stock status</Button></Grid>
+                            <Grid item onClick={showOOS}><Button>OOS Products</Button></Grid>
+                            <Grid item onClick={() => setProducts(productsFromDb)}><Button>Show All</Button></Grid>
+                            
                             
                           </Grid>
          
               </ListItem>
               
                 
-                {showCategory && <Typography><ListItem>All Categories here</ListItem></Typography>}
-                {showBrands && <Typography><ListItem>All Brands here</ListItem></Typography>}
-                {showOOS && <Typography><ListItem>
-                  <Button>Out of stock</Button>
-                  <Button>In Stock</Button>
-               
-                  </ListItem></Typography>}
-            
+                {showCategory && <ListItem sx={{ justifyContent: 'center' }}>{category.map((cat, i) => (
+                  <Button key={i} variant='contained' onClick={() => filterCategory(cat)} sx={{ margin: 1 }}>{cat}</Button>
+                ))}  <Button  variant='contained' onClick={() => setProducts(productsFromDb)} sx={{ margin: 1 }}>All</Button></ListItem>}
+
+
+                {showBrands && <ListItem sx={{ justifyContent: 'center' }}>{brands.map((brand) => (
+                  <Button key={brand} variant='contained' onClick={() => filterBrand(brand)} sx={{ margin: 1 }}>{brand}</Button>
+                ))}  <Button  variant='contained' onClick={() => setProducts(productsFromDb)} sx={{ margin: 1 }}>All</Button></ListItem>}
+      
+                
               
                   <ListItem>
                 <Typography component="h5" variant="h5">
@@ -354,12 +400,21 @@ const editProduct = (id) => {
             </form>
                   }
                 {products && products.map((product, i) => (
-                  <ListItem key={product._id}>
-                  <Typography>{i+1}. {product.title}</Typography>
+                  <Grid container spacing={3} key={i} sx={{ alignItems: 'center', marginTop:0 }} >
+                  <Grid item xs={0.5} md ={0.5}>
+                  <Typography marginLeft={1}>{i+1}.</Typography>
+                  </Grid>
+                  <Grid item xs={1} md ={1}>
+                   <Image src={product.image} width={5} height={5}  alt={product.title} objectFit='contain' layout='responsive' priority='false' ></Image> 
+                   </Grid>
+                   <Grid item xs={7.5} md ={7.5}>
+                   <Typography  onClick={() => router.push(`/product/${product._id}`)}>{product.title}</Typography>
+                  </Grid>
+                   <Grid item xs={3} md ={3}>
                   <Button onClick={() => editProduct(product._id)}>Edit</Button>
-                  </ListItem>
+                  </Grid>
+                </Grid>
                 ))}
-              
               
             </List>
           </Card>

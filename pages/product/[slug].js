@@ -43,7 +43,7 @@ const ProductScreen = ({product}) => {
                 <ListItem><Typography component='h5' variant="h5">{product.title}</Typography></ListItem>
                     <ListItem><Typography>Category: {product.category}</Typography></ListItem>
                     <ListItem><Typography>Brand: Manufacturer unavailable</Typography></ListItem>
-                    <ListItem><Typography>Rating: {product.rating.rate} Count:{product.rating.count}</Typography></ListItem>
+                   {product.rating.rate > 0 && <ListItem><Typography>Rating: {product.rating.rate} Count: {product.rating.count}</Typography></ListItem> }
                     <ListItem> <Typography>Description: {product.description}    </Typography></ListItem>
                 </List>
             </Grid>

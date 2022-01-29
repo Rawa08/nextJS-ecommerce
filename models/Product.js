@@ -9,8 +9,8 @@ const productSchema = new moongose.Schema({
     category: {type: String, required:true},
     image:{type: String, required:true},
     rating: {
-      rate: {type: Number},
-      count: {type: Number}
+      rate: {type: Number, required:true, default:0},
+      count: {type: Number, required:true, default:0}
     },
     outOfStock: {type: Boolean, required: true, default:false},
     popularity:{type: Number, required: true, default:1},
