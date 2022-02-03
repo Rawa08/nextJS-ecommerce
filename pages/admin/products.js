@@ -518,7 +518,7 @@ export const getServerSideProps = async context => {
   catch(e){
     if(e){
       return{
-        props: {products: null}
+        props: {productsFromDb: null}
       }
     }
   }
