@@ -29,6 +29,7 @@
 
 .main {
   min-height: 80vh; 
+  min-width: 98vw;
 }
 
 .footer{
@@ -91,3 +92,6 @@
  margin-top: 80px;
 }
 
+.whiteColor{
+  color: #fff !important;
+}
