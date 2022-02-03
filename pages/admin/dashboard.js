@@ -17,7 +17,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import styles from '../../styles/App.module.css';
-
+import {getError} from '../../utils/formatError';
 
 
 const Admin = () => {
@@ -45,15 +45,14 @@ const Admin = () => {
                     
                   }
                 });
-                console.log(data[0])
                 setOrders(data)
                 
                 setLoading(false)
                
                 
         }
-        catch(err) {
-            console.log(err)
+        catch(error) {
+          enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:3000 })
         }
     }
     fetchOrders()
