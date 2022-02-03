@@ -56,7 +56,7 @@ const deleteUser = id => {
   );
   enqueueSnackbar("Confirm Delete", {
     variant: 'warning',
-    autoHideDuration: 3000,
+    autoHideDuration: null,
     action,
   });
 
@@ -117,23 +117,23 @@ const removeUserConfirmed = async id => {
         <Grid item md={10} xs={12}>
          
           {users.map(u => (
-            <Grid container key={u._id} margin={1}>
-              <Grid item md={1}>
+            <Grid container key={u._id} marginTop={2}>
+              <Grid item xs={12} md={1}>
               <Typography component={'p'}>{u.fullName}</Typography>
               </Grid>
-              <Grid item md={2}>
+              <Grid item xs={12} md={2}>
               <Typography component={'p'}>{u.email}</Typography>
               </Grid>
-              <Grid item md={2}>
+              <Grid item xs={12} md={2}>
               <Typography component={'p'}>{new Date(u.createdAt).toLocaleString()}</Typography>
               </Grid>
-              <Grid item md={3}>
+              <Grid item xs={12} md={3}>
               <Typography component={'p'}>{u._id}</Typography>
               </Grid>
-              <Grid item md={2}>
+              <Grid item xs={6} md={2}>
               <Button color="info" variant='outlined' onClick={() => newPassword(u.email)}>new Password</Button>
               </Grid>
-              <Grid item md={2}>
+              <Grid item xs={6} md={2}>
               <Button color="error" variant='outlined' onClick={() => deleteUser(u._id)}>delete User</Button>
               </Grid>
             </Grid>

@@ -21,18 +21,17 @@ import Product from '../../models/Product';
 import db from '../../utils/db';
 import {useForm, Controller} from 'react-hook-form';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 
 
 const AdminProducts = ({productsFromDb}) => {
-  const {
-    state: { user },
-  } = useContext(Store);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { state: { user }} = useContext(Store);
   const router = useRouter();
 
-  const {handleSubmit, control, formState:{errors}, setValue} = useForm();
+  const {handleSubmit, control,  setValue, formState:{errors}} = useForm();
 
-  const [showAddProduct, setShowAddProduct] = useState(false);
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -123,7 +122,29 @@ const addNewProduct = async (fields) => {
     console.log(error)
   }
 }
-const deleteProduct = async () => {
+
+const deleteProduct = () => {
+
+
+  const action = key => (
+    <React.Fragment>
+        <Button  color='error' onClick={() => deleteProductConfirmed()}>
+            Delete Product
+        </Button>
+        <Button className={styles.whiteColor} onClick={() => { closeSnackbar(key) }}>
+            Cancel
+        </Button>
+    </React.Fragment>
+  );
+  enqueueSnackbar("Confirm Delete", {
+    variant: 'warning',
+    autoHideDuration: null,
+    action,
+  });
+
+}
+const deleteProductConfirmed = async () => {
+  closeSnackbar();
   try{
     
     const {data} = await axios.delete("/api/admin/deleteProduct" ,{
@@ -132,16 +153,18 @@ const deleteProduct = async () => {
       },data:{id:productId}
     });
     setShowEdit(false);
+    enqueueSnackbar(data.message, { variant: 'success', autoHideDuration:2000 });
 
     const updateStateProducts = products.filter(prod => prod._id !== productId);
 
     setProducts(updateStateProducts);
   }catch(error){
-    console.log(error)
+    enqueueSnackbar(getError(error), { variant: 'error', autoHideDuration:4000 })
   }
 }
 
 const editProduct = (id) => {
+  setAddProduct(false);
   const product = products.filter(p => (p._id === id))[0];
   setProductId(product._id)
   const {title, brand, category, description, image, price, popularity, outOfStock} = product;
@@ -170,6 +193,20 @@ const filterCategory = category => {
 
 const showOOS = () => {
   setProducts(prevArray => prevArray.filter(prod => prod.outOfStock))
+}
+
+const addProductForm = () => {
+  setShowEdit(false);
+
+  setValue('title', '')
+  setValue('brand', '')
+  setValue('category', '')
+  setValue('description', '')
+  setValue('image', '')
+  setValue('price', null)
+  setValue('popularity', null)
+  setValue('oos', null)
+  setAddProduct(true)
 }
   
   return (
@@ -204,7 +241,7 @@ const showOOS = () => {
         
               <ListItem>
                           <Grid container spacing={2}>
-                            {!addProduct && <Grid item><Button onClick={()=>setAddProduct(true)}>Add product</Button></Grid>}
+                            {!addProduct && <Grid item><Button onClick={addProductForm}>Add product</Button></Grid>}
                             <Grid item onClick={()=>setShowCategory(!showCategory)}><Button>Show by Category</Button></Grid>
                             <Grid item onClick={()=>setShowBrands(!showBrands)}><Button>Show by Brand</Button></Grid>
                             <Grid item onClick={showOOS}><Button>OOS Products</Button></Grid>
@@ -216,14 +253,27 @@ const showOOS = () => {
               </ListItem>
               
                 
-                {showCategory && <ListItem sx={{ justifyContent: 'center' }}>{category.map((cat, i) => (
-                  <Button key={i} variant='contained' onClick={() => filterCategory(cat)} sx={{ margin: 1 }}>{cat}</Button>
-                ))}  <Button  variant='contained' onClick={() => setProducts(productsFromDb)} sx={{ margin: 1 }}>All</Button></ListItem>}
+                {showCategory &&   <Grid container spacing={1} padding={1}>{category.map((cat, i) => (
+                 <Grid item xs={cat.length > 13 ? 12 : 6} md ={2} key={i}>
+                  <Button variant='contained' onClick={() => filterCategory(cat)} fullWidth >{cat}</Button>
+                  </Grid>
+                ))} 
+                <Grid item xs={6} md ={2}>
+                 <Button  variant='contained' fullWidth onClick={() => setProducts(productsFromDb)} >All</Button>
+                 </Grid>
+                </Grid>}
 
 
-                {showBrands && <ListItem sx={{ justifyContent: 'center' }}>{brands.map((brand) => (
-                  <Button key={brand} variant='contained' onClick={() => filterBrand(brand)} sx={{ margin: 1 }}>{brand}</Button>
-                ))}  <Button  variant='contained' onClick={() => setProducts(productsFromDb)} sx={{ margin: 1 }}>All</Button></ListItem>}
+                {showBrands && <Grid container spacing={1} padding={1}>{brands.map((brand, i) => (
+                  <Grid item xs={brand.length > 13 ? 12 : 6} md ={brand.length > 13 ? 4 : 2} key={i}>
+                  <Button variant='contained' fullWidth onClick={() => filterBrand(brand)}>{brand}</Button>
+                  </Grid>
+                ))}  
+                
+                <Grid item xs={6} md ={2}>
+                <Button  variant='contained' fullWidth onClick={() => setProducts(productsFromDb)}>All</Button>
+                </Grid>
+                </Grid>}
       
                 
               
@@ -236,8 +286,8 @@ const showOOS = () => {
                 
                 <form className={styles.form} onSubmit={handleSubmit(addNewProduct)}>
            
-                <List>
-                    <ListItem>
+           <Grid container spacing={2} sx={{ marginTop:0, padding:2 }} >
+           <Grid item xs={12} md ={6}>
 
                         <Controller name="title"
                         control={control}
@@ -246,8 +296,8 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="title" label='Product Name' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                    </Grid>
+                    <Grid item xs={12} md ={6}>
                         <Controller name="brand"
                         control={control}
                         defaultValue=""
@@ -255,8 +305,8 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="brand" label='Brand' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                   </Grid>
+                   <Grid item xs={12} md ={6}>
                         <Controller name="category"
                         control={control}
                         defaultValue=""
@@ -264,8 +314,8 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="category" label='Category' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                        </Grid>
+                         <Grid item xs={12} md ={6}>
                         <Controller name="description"
                         control={control}
                         defaultValue=""
@@ -273,45 +323,60 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="description" label='Product Description' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem alignItems='center'>
+                        </Grid>
+                       
+                        <Grid item xs={12} md ={12}>
                         <Controller name="image"
                         control={control}
                         defaultValue=""
+                        rules={{
+                          required:true,
+                          pattern: /(^\/|^http)/
+                      }}
                         render={({field})=>(
-                            <TextField  sx={{width: '50%', marginRight:'auto' }} variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
+                            <TextField   variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}} 
+                            error={Boolean(errors.image)}
+                            helperText={errors.image && 'Image path have to be absolute (/imagefolder.. or http:// )'}
+                            {...field}
                             ></TextField>
                         )}></Controller>
-                   
+                   </Grid>
+                   <Grid item xs={12} md={4}>
                    <Controller name="oos"
                         control={control}
                         defaultValue={false}
                         render={({field})=>(
-                           <Typography sx={{width: '15%', margin:'auto' }}>Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
+                           <Typography >Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
                            /></Typography> 
                         )}></Controller>
+                          </Grid>
+                          <Grid item xs={12} md={4}>
                         <Controller name="price"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField sx={{width: '14%', margin:'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
+                            <TextField  variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
                         <Controller name="popularity"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField  sx={{width: '14%', marginLeft:'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
+                            <TextField   variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                        
-                    </ListItem>
-                    <ListItem>
-                        <Button variant='contained' color='secondary' type='submit' sx={{width: '68%', margin: 'auto' }}>Add</Button>
-                        <Button variant='contained' color='error' type='submit' sx={{width: '30%', margin: 'auto' }} onClick={() => setAddProduct(false)}>X</Button>
-                    </ListItem>
+                        </Grid>
+                   
+                        <Grid item xs={6} md={6}>
+                        <Button variant='contained' color='secondary' type='submit' fullWidth >Add</Button>
+                        </Grid>
+                        <Grid item xs={6} md={6}>
+                        <Button variant='contained' color='error' type='submit' fullWidth onClick={() => setAddProduct(false)}>X</Button>
+                   </Grid>
                  
-                </List>
+                </Grid>
             </form>
                 
                 }
@@ -320,18 +385,17 @@ const showOOS = () => {
                  
                                 <form className={styles.form} onSubmit={handleSubmit(submitUpdate)}>
            
-                <List>
-                    <ListItem>
-
+           <Grid container spacing={2} sx={{ marginTop:0, padding:2 }} >
+           <Grid item xs={12} md ={6}>
                         <Controller name="title"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField variant='outlined' fullWidth id="title" label='Product Name' inputProps={{type:'text'}}  {...field}
+                            <TextField variant='outlined'  fullWidth id="title" label='Product Name' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                    </Grid>
+                    <Grid item xs={12} md ={6}>
                         <Controller name="brand"
                         control={control}
                         defaultValue=""
@@ -339,8 +403,9 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="brand" label='Brand' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                        </Grid>
+                    <Grid item xs={12} md ={6}>
+                  
                         <Controller name="category"
                         control={control}
                         defaultValue=""
@@ -348,8 +413,8 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="category" label='Category' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem>
+                    </Grid>
+                    <Grid item xs={12} md ={6}>
                         <Controller name="description"
                         control={control}
                         defaultValue=""
@@ -357,60 +422,77 @@ const showOOS = () => {
                             <TextField variant='outlined' fullWidth id="description" label='Product Description' inputProps={{type:'text'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                    </ListItem>
-                    <ListItem alignItems='center'>
+                    </Grid>
+                    <Grid item xs={12} md ={12}>
                         <Controller name="image"
                         control={control}
                         defaultValue=""
+                        rules={{
+                          required:true,
+                          pattern: /(^\/|^http)/
+                      }}
                         render={({field})=>(
-                            <TextField  sx={{width: '50%', marginRight:'auto' }} variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}  {...field}
+                            <TextField   variant='outlined' fullWidth id="image" label='Image' inputProps={{type:'text'}}
+                            error={Boolean(errors.image)}
+                            helperText={errors.image && 'Image path have to be absolute (/imagefolder.. or http:// )'}
+                            {...field}
                             ></TextField>
                         )}></Controller>
-                   
+                   </Grid>
+                   <Grid item xs={12} md={4}>
                    <Controller name="oos"
                         control={control}
                         defaultValue={false}
                         render={({field})=>(
-                           <Typography sx={{width: '15%', margin:'auto' }}>Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
+                           <Typography  >Out of stock: <Switch  id="oos" label='outOfStock' inputProps={{type:'checkbox'}} checked={field.value} {...field}
                            /></Typography> 
                         )}></Controller>
+                        </Grid>
+                        <Grid item xs={6} md={4}>
                         <Controller name="price"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField sx={{width: '14%', margin:'auto' }} variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
+                            <TextField  variant='outlined' fullWidth id="price" label='Price' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
+                        </Grid>
+                                <Grid item xs={6} md={4}>
                         <Controller name="popularity"
                         control={control}
                         defaultValue=""
                         render={({field})=>(
-                            <TextField  sx={{width: '14%', marginLeft:'auto' }} variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
+                            <TextField  variant='outlined' fullWidth id="popularity" label='popularity' inputProps={{type:'number'}}  {...field}
                             ></TextField>
                         )}></Controller>
-                        
-                    </ListItem>
-                    <ListItem>
-                        <Button variant='contained' color='secondary' type='submit' sx={{width: '50%', margin: 'auto' }}>UPDATE</Button>
-                        <Button variant='contained' color='error' type='submit' sx={{width: '30%', margin: 'auto' }} onClick={() => deleteProduct()}>REMOVE PRODUCT</Button>
-                        <Button variant='contained' color='error' type='submit' sx={{width: '18%', margin: 'auto' }} onClick={() => setShowEdit(false)}>CLOSE</Button>
-                    </ListItem>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                        <Button variant='contained' color='error' type='submit' fullWidth onClick={() => deleteProduct()}>REMOVE PRODUCT</Button>
+                        </Grid>
+                        <Grid item xs={6} md={4}>
+                        <Button variant='contained' color='secondary' fullWidth type='submit'>UPDATE</Button>
+                        </Grid>
+                        <Grid item xs={6} md={4}>
+                        <Button variant='contained' color='error' type='submit' fullWidth onClick={() => setShowEdit(false)}>CLOSE</Button>
+                        </Grid>
+                   
                  
-                </List>
+                </Grid>
             </form>
                   }
+
                 {products && products.map((product, i) => (
                   <Grid container spacing={3} key={i} sx={{ alignItems: 'center', marginTop:0 }} >
-                  <Grid item xs={0.5} md ={0.5}>
-                  <Typography marginLeft={1}>{i+1}.</Typography>
+                  <Grid item xs={1} md ={0.5}>
+                  <Typography margin={1}>{i+1}.</Typography>
                   </Grid>
-                  <Grid item xs={1} md ={1}>
+                  <Grid item xs={2} md={1}>
                    <Image src={product.image} width={5} height={5}  alt={product.title} objectFit='contain' layout='responsive' priority='false' ></Image> 
                    </Grid>
-                   <Grid item xs={7.5} md ={7.5}>
+                   <Grid item xs={6} md={7.5}>
                    <Typography  onClick={() => router.push(`/product/${product._id}`)}>{product.title}</Typography>
                   </Grid>
-                   <Grid item xs={3} md ={3}>
+                   <Grid item xs={2} md={3}>
                   <Button onClick={() => editProduct(product._id)}>Edit</Button>
                   </Grid>
                 </Grid>
