@@ -1,5 +1,6 @@
 import nc from 'next-connect';
-import {isAuth, onError} from '../../../utils/auth';
+import {isAuth} from '../../../utils/auth';
+import {onError} from '../../../utils/formatError';
 import sendgrid from '@sendgrid/mail';
 
 sendgrid.setApiKey(process.env.SENDGRID_KEY);
