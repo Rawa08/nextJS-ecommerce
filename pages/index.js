@@ -90,7 +90,7 @@ export default function Home({productsFromDb}) {
   return (
      <Layout title="My E-commerce">
        <Grid container spacing={1} className={styles.homeContainer}>
-         <Grid item xs={12} md={2}>
+         <Grid item xs={12} md={3}>
          <TextField id="outlined-basic" label="Search" variant="outlined" fullWidth onChange={searchProduct} />
          <Button onClick={() => filterList(1)}>Brands</Button>
          <Button onClick={() => filterList(2)}>Category</Button>
@@ -112,12 +112,12 @@ export default function Home({productsFromDb}) {
          }
 
           <Grid item padding={1}>
-          <Button  variant='contained' fullWidth onClick={() => filterList()} >Show All Products</Button>
+          <Button  variant='outlined' fullWidth onClick={() => filterList()} >Show All Products</Button>
           </Grid>
 
          </Grid>
          
-         <Grid item xs={12} md={10}>
+         <Grid item xs={12} md={9}>
        <Grid container spacing={1}>
         { products ? products.map(product => (
             <Grid item md={4} xs={12} key={product._id}> 
