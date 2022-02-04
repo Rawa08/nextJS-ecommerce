@@ -2,8 +2,9 @@
 import {useContext, useState, useEffect} from 'react';
 import {Store} from '../utils/Store';
 import NextLink from 'next/link';
+import Image from 'next/image'
 import Layout from '../components/Layout';
-import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button, TextField } from '@mui/material';
+import {Grid, Card, CardActionArea, CardContent, Typography, CardActions, Button, TextField } from '@mui/material';
 import styles from '../styles/App.module.css';
 import db from '../utils/db';
 import Product from '../models/Product';
@@ -125,7 +126,7 @@ export default function Home({productsFromDb}) {
             <NextLink href={`/product/${product._id}`} passHref>
               <CardActionArea>
              
-                <CardMedia component='img' image={product.image} title={product.title}  className={styles.productImage}></CardMedia>
+                <Image src={product.image} alt={product.title} width={600} height={600} className={styles.productImage} />
                 </CardActionArea>
                 </NextLink>
               <CardContent>
